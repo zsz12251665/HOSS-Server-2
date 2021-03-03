@@ -13,7 +13,7 @@ const util = require('util');
 const pool = mysql.createPool(config); // MySQL 连接池
 
 module.exports = {
-	// getPoolConnection: util.promisify(pool.getConnection).bind(pool), // 从 MySQL 连接池中获取连接
-	query: util.promisify(pool.query).bind(pool), // 向 MySQL 数据库发送询问
-	createConnection: () => mysql.createConnection(config) // 创建新的 MySQL 连接（不从连接池中获取）
+	// getPoolConnection: util.promisify(pool.getConnection).bind(pool),
+	query: util.promisify(pool.query).bind(pool),
+	createConnection: () => mysql.createConnection(config)
 };
