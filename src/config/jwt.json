@@ -1,0 +1,10 @@
+{
+	"secret": "[JWT Secret]",
+	"issuer": "[JWT Issuer]",
+	"options": {
+		"userToken": {
+			"algorithm": "HS256",
+			"expiresIn": "2h"
+		}
+	}
+}
