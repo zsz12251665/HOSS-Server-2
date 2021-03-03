@@ -1,0 +1,23 @@
+{
+	"name": "hoss-server-2",
+	"version": "0.0.0",
+	"description": "The server scripts for HOSS (Homework Online Submit System)",
+	"scripts": {
+		"start": "node ./src/app.js"
+	},
+	"author": "zsz12251665",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zsz12251665/HOSS-Server-2.git"
+	},
+	"dependencies": {
+		"connect-multiparty": "^2.2.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"mysql": "^2.18.1"
+	},
+	"devDependencies": {
+		"eslint": "^7.21.0"
+	}
+}
