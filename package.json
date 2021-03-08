@@ -1,6 +1,6 @@
 {
-	"name": "hoss-server-2",
-	"version": "0.0.0",
+	"name": "hoss-server",
+	"version": "2.0.0",
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
 		"start": "node ./src/app.js"
