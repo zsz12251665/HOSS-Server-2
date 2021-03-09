@@ -13,11 +13,7 @@ app.use(multipart()); // 解析 multipart/form-data
 
 app.use(express.static('static')); // 访问静态资源
 
-app.use('/api', require('./api/router')); // 设定 /api 的路由器
-
-app.get('/', (req, res) => { // 服务器启动标识
-	res.status(200).type('text/plain').send('It works!');
-});
+app.use('/api', require('./router')); // 设定转发路由器
 
 var server = app.listen(config.port, () => { // 开始监听
 	console.log('App running at port %d', server.address().port);

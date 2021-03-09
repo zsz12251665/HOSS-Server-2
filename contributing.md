@@ -13,12 +13,6 @@
 
 ```plain
 src
-|-- api                 REST API 接口目录
-|   |-- admin           管理员接口目录
-|   |   `-- login.js    管理员登录接口
-|   |
-|   `-- router.js       REST API 路由
-|
 |-- components          组件目录
 |   |-- db.js           数据库组件（封装自 MySQL）
 |   `-- token.js        令牌组件（封装自 JsonWebToken）
@@ -28,9 +22,20 @@ src
 |   |-- mysql.json      MySQL 配置
 |   `-- server.json     服务器配置
 |
-`-- app.js              服务器入口
+|-- models              接口模型目录
+|   |-- admin           管理员接口目录
+|   |   `-- login.js    管理员登录接口
+|   |
+|   `-- homework        作业接口目录
+|       `-- upload.js   作业上传接口
+|
+|-- app.js              服务器入口
+`-- router.js           REST API 路由
 
 static                  静态资源（挂载在根目录下）
+|-- index.html          主页面（服务器启动标志）
+|-- login.html          管理员登录页面模板
+`-- upload.html         作业上传页面模板
 ```
 
 ## 数据库结构设计
@@ -48,3 +53,7 @@ CREATE TABLE homeworks (
   `validator` VARCHAR NOT NULL # 文件名验证器，一个正则表达式
 );
 ```
+
+## 参考资料
+
+- [HTTP response status codes - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)

@@ -1,7 +1,7 @@
 /*
 管理员登录接口
 
-请求字段
+POST 请求字段
 
 - username：用户名
 - password：密码
@@ -14,18 +14,26 @@
 */
 
 const token = require('../../components/token');
+const express = require('express');
 
-function identityValid(username, password) {
-	return username && password; // 验证账号密码，未实现
+const router = express.Router();
+
+function login(username, password) { // 验证账号密码并生成用户令牌（验证未实现）
+	if (!username || !password)
+		return null;
+	return token.encode({ user: username, role: 'admin' }, 'userToken');
 }
 
-module.exports = (req, res) => {
+router.post('/', (req, res) => {
 	const username = req.body.username, password = req.body.password;
-	if (username && password)
-		if (identityValid(username, password))
-			res.status(200).type('text/plain').send(token.encode({ user: username, role: 'admin' }, 'userToken'));
+	if (username && password) {
+		const token = login(username, password);
+		if (token)
+			res.status(200).type('text/plain').send(token);
 		else
 			res.status(401).type('text/plain').send('Login failed!');
-	else
+	} else
 		res.status(400).type('text/plain').send('Incomplete form!');
-};
+});
+
+module.exports = router;

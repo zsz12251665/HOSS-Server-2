@@ -1,4 +1,4 @@
-# HOSS-Server 2.0
+# HOSS-Server 2
 
 *基于 Node.js 的在线作业提交系统*
 
@@ -12,19 +12,7 @@
 
 ## REST API
 
-### `/`：服务器启动标识
-
-#### 请求
-
-`GET` 请求，无参数。
-
-#### 响应
-
-| 代码  |    类型    |     内容      |
-| :---: | :--------: | :-----------: |
-|  200  | text/plain | `"It works!"` |
-
-### `/api/admin/login`：管理员登录接口
+### `/api/admin/login/`：管理员登录接口
 
 #### 请求
 
@@ -42,3 +30,15 @@
 |  200  | text/plain |  一个 JWT 用户令牌   |
 |  400  | text/plain | `"Incomplete form!"` |
 |  401  | text/plain |  `"Login failed!"`   |
+
+### `/api/homework/upload/`：作业上传接口
+
+#### 请求
+
+`PUT` 请求，参数待定。
+
+#### 响应
+
+| 代码  |    类型    |             内容              |
+| :---: | :--------: | :---------------------------: |
+|  501  | text/plain | `"Function not implemented!"` |
