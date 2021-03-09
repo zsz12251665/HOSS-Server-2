@@ -13,26 +13,20 @@ POST 请求字段
 - HTTP 401 Unauthorized：'Login failed!'，账号密码未通过验证（账号密码错误）
 */
 
+const config = require('../../config/admin.json');
 const token = require('../../components/token');
 const express = require('express');
 
 const router = express.Router();
 
-function login(username, password) { // 验证账号密码并生成用户令牌（验证未实现）
-	if (!username || !password)
-		return null;
-	return token.encode({ user: username, role: 'admin' }, 'userToken');
-}
-
 router.post('/', (req, res) => {
 	const username = req.body.username, password = req.body.password;
-	if (username && password) {
-		const token = login(username, password);
-		if (token)
-			res.status(200).type('text/plain').send(token);
+	if (username && password)
+		if (username == config.username && password == config.password)
+			res.status(200).type('text/plain').send(token.encode({ user: username, role: 'admin' }, 'userToken'));
 		else
 			res.status(401).type('text/plain').send('Login failed!');
-	} else
+	else
 		res.status(400).type('text/plain').send('Incomplete form!');
 });
 
