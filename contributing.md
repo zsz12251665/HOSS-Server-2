@@ -6,6 +6,7 @@
 - 配置 `src/config/` 中的配置文件
   - `server.json` 配置服务端口
   - `mysql.json` 配置您的 MySQL 服务器信息
+  - `admin.json` 配置管理员账号密码
   - `jwt.json` 配置 JWT 令牌密钥及签发人
 - 运行 `npm install` 以安装依赖包。
 
@@ -18,6 +19,7 @@ src
 |   `-- token.js        令牌组件（封装自 JsonWebToken）
 |
 |-- config              配置目录
+|   |-- admin.json      管理员配置
 |   |-- jwt.json        JWT 配置
 |   |-- mysql.json      MySQL 配置
 |   `-- server.json     服务器配置
@@ -26,7 +28,7 @@ src
 |   |-- admin           管理员接口目录
 |   |   `-- login.js    管理员登录接口
 |   |
-|   `-- homework        作业接口目录
+|   `-- user            普通用户接口目录
 |       `-- upload.js   作业上传接口
 |
 |-- app.js              服务器入口
@@ -42,16 +44,22 @@ static                  静态资源（挂载在根目录下）
 
 ```sql
 CREATE TABLE students (
-  `name` VARCHAR NOT NULL, # 学生姓名
-  `number` VARCHAR NOT NULL # 学生学号
-);
+  `name` VARCHAR(255) NOT NULL, # 学生姓名
+  `number` VARCHAR(255) NOT NULL # 学生学号
+) CHARSET=utf8mb4;
+
+ALTER TABLE students ADD PRIMARY KEY (`number`);
 
 CREATE TABLE homeworks (
-  `title` VARCHAR NOT NULL, # 作业标题
-  `directory` VARCHAR NOT NULL, # 作业目录
+  `id` INT NOT NULL AUTO_INCREMENT, # 作业编号
+  `title` VARCHAR(255) NOT NULL, # 作业标题
+  `directory` VARCHAR(255) NOT NULL, # 作业目录
   `deadline` TIMESTAMP NOT NULL, # 作业提交截止时间
-  `validator` VARCHAR NOT NULL # 文件名验证器，一个正则表达式
-);
+  `validator` VARCHAR(255) NOT NULL # 文件名验证器，一个正则表达式
+) CHARSET=utf8mb4;
+
+ALTER TABLE homeworks ADD PRIMARY KEY (`id`);
+
 ```
 
 ## 参考资料

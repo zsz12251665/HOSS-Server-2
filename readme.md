@@ -31,14 +31,25 @@
 |  400  | text/plain | `"Incomplete form!"` |
 |  401  | text/plain |  `"Login failed!"`   |
 
-### `/api/homework/upload/`：作业上传接口
+### `/api/user/upload/`：作业上传接口
 
 #### 请求
 
-`PUT` 请求，参数待定。
+`PUT` 请求，参数如下：
+
+|        字段        |  类型  |    内容    |
+| :----------------: | :----: | :--------: |
+|   `studentName`    | string |  学生姓名  |
+|  `studentNumber`   | string |  学生学号  |
+|  `homeworkTitle`   | string |  作业标题  |
+|   `homeworkFile`   |  file  |  作业文件  |
+| `homeworkFilename` | string | 作业文件名 |
 
 #### 响应
 
 | 代码  |    类型    |             内容              |
 | :---: | :--------: | :---------------------------: |
+|  400  | text/plain |     `"Incomplete form!"`      |
+|  401  | text/plain |     `"No such student!"`      |
+|  401  | text/plain |     `"No such homework!"`     |
 |  501  | text/plain | `"Function not implemented!"` |
