@@ -29,6 +29,7 @@ src
 |   |   `-- login.js    管理员登录接口
 |   |
 |   `-- user            普通用户接口目录
+|       |-- list.js     作业列表获取接口
 |       `-- upload.js   作业上传接口
 |
 |-- app.js              服务器入口
@@ -43,14 +44,14 @@ static                  静态资源（挂载在根目录下）
 ## 数据库结构设计
 
 ```sql
-CREATE TABLE students (
+CREATE TABLE students ( # 学生列表
   `name` VARCHAR(255) NOT NULL, # 学生姓名
   `number` VARCHAR(255) NOT NULL # 学生学号
 ) CHARSET=utf8mb4;
 
 ALTER TABLE students ADD PRIMARY KEY (`number`);
 
-CREATE TABLE homeworks (
+CREATE TABLE homeworks ( # 作业列表
   `id` INT NOT NULL AUTO_INCREMENT, # 作业编号
   `title` VARCHAR(255) NOT NULL, # 作业标题
   `directory` VARCHAR(255) NOT NULL, # 作业目录
@@ -60,6 +61,17 @@ CREATE TABLE homeworks (
 
 ALTER TABLE homeworks ADD PRIMARY KEY (`id`);
 
+CREATE TABLE submissions ( # 提交列表
+  `id` INT NOT NULL AUTO_INCREMENT, # 提交编号
+  `student` VARCHAR(255) NOT NULL, # 学生学号
+  `homework` INT NOT NULL, # 作业编号
+  `time` TIMESTAMP NOT NULL, # 提交时间
+  `filename` VARCHAR(255) NOT NULL # 作业文件名
+) CHARSET=ut8mb4;
+
+ALTER TABLE submissions ADD PRIMARY KEY (`id`);
+ALTER TABLE submissions ADD FOREIGN KEY (`student`) REFERENCES students(`number`);
+ALTER TABLE submissions ADD FOREIGN KEY (`homework`) REFERENCES homeworks(`id`);
 ```
 
 ## 参考资料

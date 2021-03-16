@@ -31,7 +31,29 @@
 |  400  | text/plain | `"Incomplete form!"` |
 |  401  | text/plain |  `"Login failed!"`   |
 
-### `/api/user/upload/`：作业上传接口
+### `/api/homework/list/`：作业列表获取接口
+
+#### 请求
+
+`GET` 请求，参数如下：
+
+|    字段     |  类型  |        内容         |
+| :---------: | :----: | :-----------------: |
+| `*/:number` | string | *（可选）* 学生学号 |
+
+#### 响应
+
+一段 JSON 文本（状态码 `HTTP 200`），该对象有属性如下：
+
+|    属性     |  类型   |                       内容                        |
+| :---------: | :-----: | :-----------------------------------------------: |
+|    `id`     | number  |                     作业编号                      |
+|   `title`   | string  |                     作业标题                      |
+| `deadline`  | number  |                 作业提交截止时间                  |
+| `validator` | string  |          文件名验证器（一个正则表达式）           |
+| `submitted` | boolean | *（仅传递了有效的学生学号时）* 学生是否提交了作业 |
+
+### `/api/homework/upload/`：作业上传接口
 
 #### 请求
 
@@ -41,7 +63,7 @@
 | :----------------: | :----: | :--------: |
 |   `studentName`    | string |  学生姓名  |
 |  `studentNumber`   | string |  学生学号  |
-|  `homeworkTitle`   | string |  作业标题  |
+|    `homeworkId`    | string |  作业编号  |
 |   `homeworkFile`   |  file  |  作业文件  |
 | `homeworkFilename` | string | 作业文件名 |
 

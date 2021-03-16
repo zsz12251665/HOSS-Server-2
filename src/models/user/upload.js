@@ -5,7 +5,7 @@ PUT 请求字段
 
 - studentName：学生姓名
 - studentNumber：学生学号
-- homeworkTitle：作业标题
+- homeworkId：作业编号
 - homeworkFile：作业文件
 - homeworkFilename：作业文件名
 
@@ -23,19 +23,19 @@ const express = require('express');
 
 const router = express.Router();
 
-async function processRequest(req) {
-	const { studentName, studentNumber, homeworkTitle, homeworkFilename } = req.body, { homeworkFile } = req.files;
-	if (!(studentName && studentNumber && homeworkTitle && homeworkFilename && homeworkFile))
+async function saveFile(req) {
+	const { studentName, studentNumber, homeworkId, homeworkFilename } = req.body, { homeworkFile } = req.files;
+	if (!(studentName && studentNumber && homeworkId && homeworkFilename && homeworkFile))
 		return { status: 400, message: 'Incomplete form!' };
 	if (!await db.select('students', { name: studentName, number: studentNumber }))
 		return { status: 401, message: 'No such student!' };
-	if (!await db.select('homeworks', { title: homeworkTitle }))
+	if (!await db.select('homeworks', { id: homeworkId }))
 		return { status: 401, message: 'No such homework!' };
 	return { status: 501, message: 'Function not implemented!' };
 }
 
 router.put('/', async (req, res) => {
-	const { status, message } = await processRequest(req);
+	const { status, message } = await saveFile(req);
 	res.status(status).type('text/plain').send(message);
 });
 
