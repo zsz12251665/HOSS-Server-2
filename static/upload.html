@@ -4,13 +4,27 @@
 	</head>
 	<body>
 		<h1>Homework Upload</h1>
-		<form> <!-- Form should be submitted with JavaScript -->
-			<p>Student Name: <input type="text" name="studentName" placeholder="Student Name" /></p>
-			<p>Student Number: <input type="text" name="studentNumber" placeholder="Student Number" /></p>
-			<p>Homework Title: <select name="homeworkTitle"></select></p>
-			<p>Homework File: <input type="file" name="homeworkFile" /></p>
-			<p>Homework Filename (Including extension): <input type="text" name="homeworkFilename" placeholder="[Filename Description]" /></p> <!-- 上传文件时可自动填充文件名 -->
-			<p><input type="submit" /></p>
+		<!-- The form should be submitted with AJAX requests -->
+		<form>
+			<label for="studentName">Student Name: </label>
+			<input type="text" name="studentName" placeholder="Student Name" />
+			<br />
+			<label for="studentNumber">Student Number: </label>
+			<input type="text" name="studentNumber" placeholder="Student Number" />
+			<br />
+			<label for="homeworkId">Homework Title: </label>
+			<select name="homeworkId">
+				<option value="{{homeworks.id}}">{{homeworks.title}}</option>
+			</select>
+			<br />
+			<label for="homeworkFile">Homework File: </label>
+			<input type="file" name="homeworkFile" />
+			<br />
+			<label for="homeworkFilename">Homework Filename (Including extension): </label>
+			<!-- Filename can be auto filled after choosing the homework file -->
+			<input type="text" name="homeworkFilename" placeholder="{{homeworks.validator}}" />
+			<br />
+			<input type="submit" />
 		</form>
 	</body>
 </html>

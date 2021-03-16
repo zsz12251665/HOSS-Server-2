@@ -1,5 +1,9 @@
 # HOSS-Server 2
 
+[![HOSS-Server 2](https://img.shields.io/badge/HOSS%20Server%202-developing-inactive.svg?logo=Node.js)](https://github.com/zsz12251665/HOSS-Server-2)
+[![License](https://img.shields.io/github/license/zsz12251665/HOSS-Server-2.svg)](https://github.com/zsz12251665/HOSS-Server-2/blob/master/LICENCE)
+[![HOSS-Server 2](https://img.shields.io/badge/contributing-manual-informational.svg)](https://github.com/zsz12251665/HOSS-Server-2/blob/master/contributing.md)
+
 *基于 Node.js 的在线作业提交系统*
 
 这是 HOSS（**H**omework **O**nline **S**ubmit **S**ystem，在线作业提交系统）的服务器脚本。
@@ -43,7 +47,7 @@
 
 #### 响应
 
-一段 JSON 文本（状态码 `HTTP 200`），该对象有属性如下：
+一段 JSON 文本（状态码 `200`），该对象有属性如下：
 
 |    属性     |  类型   |                       内容                        |
 | :---------: | :-----: | :-----------------------------------------------: |

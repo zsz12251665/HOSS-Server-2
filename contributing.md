@@ -13,7 +13,7 @@
 ## 源代码结构设计
 
 ```plain
-src
+src                     核心代码目录
 |-- components          组件目录
 |   |-- db.js           数据库组件（封装自 MySQL）
 |   `-- token.js        令牌组件（封装自 JsonWebToken）
@@ -35,7 +35,7 @@ src
 |-- app.js              服务器入口
 `-- router.js           REST API 路由
 
-static                  静态资源（挂载在根目录下）
+static                  静态资源目录（挂载在根目录下）
 |-- index.html          主页面（服务器启动标志）
 |-- login.html          管理员登录页面模板
 `-- upload.html         作业上传页面模板
@@ -76,4 +76,6 @@ ALTER TABLE submissions ADD FOREIGN KEY (`homework`) REFERENCES homeworks(`id`);
 
 ## 参考资料
 
+- [Express 4.x - API Reference](https://expressjs.com/en/api.html) ([中文版](https://www.expressjs.com.cn/4x/api.html))
 - [HTTP response status codes - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+- [JSON Web Tokens - jwt.io](https://jwt.io/)
