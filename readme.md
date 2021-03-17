@@ -79,3 +79,21 @@
 |  401  | text/plain |     `"No such student!"`      |
 |  401  | text/plain |     `"No such homework!"`     |
 |  501  | text/plain | `"Function not implemented!"` |
+
+### `/api/student/validate/`：学生信息验证接口
+
+#### 请求
+
+`POST` 请求，参数如下：
+
+|   字段   |  类型  |   内容   |
+| :------: | :----: | :------: |
+|  `name`  | string | 学生姓名 |
+| `number` | string | 学生学号 |
+
+#### 响应
+
+| 代码  |    类型    |          内容          |
+| :---: | :--------: | :--------------------: |
+|  200  | text/plain |   `"Student Found!"`   |
+|  404  | text/plain | `"Student Not Found!"` |

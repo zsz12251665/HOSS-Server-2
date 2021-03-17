@@ -15,7 +15,6 @@ PUT 请求字段
 - HTTP 401 Unauthorized：'No such student!'，查无此学生
 - HTTP 401 Unauthorized：'No such homework!'，查无此作业
 - HTTP 501 Not Implemented：'Function not implemented!'，功能未实现
-
 */
 
 const db = require('../../components/db');

@@ -14,7 +14,6 @@ GET 请求
 - deadline：作业提交截止时间
 - validator：文件名验证器（一个正则表达式）
 - submitted：学生是否提交了作业（仅当 URL 中传递了有效的学生学号时）
-
 */
 
 const db = require('../../components/db');
