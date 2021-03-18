@@ -54,7 +54,6 @@ CREATE TABLE students ( # 学生列表
 CREATE TABLE homeworks ( # 作业列表
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '作业编号',
   `title` VARCHAR(255) NOT NULL COMMENT '作业标题',
-  `directory` VARCHAR(255) NOT NULL COMMENT '作业目录',
   `deadline` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作业提交截止时间',
   `validator` VARCHAR(255) NOT NULL COMMENT '文件名验证器（一个正则表达式）',
   PRIMARY KEY (`id`)

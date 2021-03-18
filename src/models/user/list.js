@@ -22,22 +22,14 @@ const express = require('express');
 const router = express.Router();
 
 async function getList() {
-	return (await db.select('homeworks', {}))
-		.filter(item => item.deadline > Date.now())
-		.map(({ id, title, deadline, validator }) => ({ id, title, deadline, validator }));
+	return (await db.select('homeworks', {})).filter(item => item.deadline > Date.now());
 }
 
 async function getListWithStudentNumber(number) {
-	if (await db.select('students', { number }))
-		return (await db.select('homeworks', {}))
-			.filter(item => item.deadline > Date.now())
-			.map(async ({ id, title, deadline, validator }) => ({
-				id,
-				title,
-				deadline,
-				validator,
-				submitted: (await db.select('submissions', { student: number, homework: id })).length > 0
-			}));
+	if (await db.exists('students', { number }))
+		return (await getList()).map(async item => Object.assign(item, {
+			submitted: await db.exists('submissions', { student: number, homework: item.id })
+		}));
 	else
 		return getList();
 }

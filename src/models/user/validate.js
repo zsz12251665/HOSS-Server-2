@@ -17,13 +17,9 @@ const express = require('express');
 
 const router = express.Router();
 
-async function findStudent(req) {
-	const { name, number } = req.body;
-	return await db.select('students', { name, number });
-}
-
 router.get('/', async (req, res) => {
-	if (await findStudent(req))
+	const { name, number } = req.body;
+	if (await db.exists('students', { name, number }))
 		res.status(200).type('text/plain').send('Student Found!');
 	else
 		res.status(404).type('text/plain').send('Student Not Found!');

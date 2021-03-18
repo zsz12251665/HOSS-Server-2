@@ -26,9 +26,9 @@ async function saveFile(req) {
 	const { studentName, studentNumber, homeworkId, homeworkFilename } = req.body, { homeworkFile } = req.files;
 	if (!(studentName && studentNumber && homeworkId && homeworkFilename && homeworkFile))
 		return { status: 400, message: 'Incomplete form!' };
-	if (!await db.select('students', { name: studentName, number: studentNumber }))
+	if (!await db.exists('students', { name: studentName, number: studentNumber }))
 		return { status: 401, message: 'No such student!' };
-	if (!await db.select('homeworks', { id: homeworkId }))
+	if (!await db.exists('homeworks', { id: homeworkId }))
 		return { status: 401, message: 'No such homework!' };
 	return { status: 501, message: 'Function not implemented!' };
 }
