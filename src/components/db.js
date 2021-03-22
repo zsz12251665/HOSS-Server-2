@@ -19,7 +19,7 @@ const query = util.promisify(pool.query).bind(pool);
 const insert = (table, entry) => query('INSERT INTO ?? SET ?', [table, entry]);
 const remove = (table, entry) => query('DELETE FROM ?? WHERE ?', [table, entry]);
 const update = (table, oldEntry, newEntry) => query('UPDATE ?? SET ? WHERE ?', [table, newEntry, oldEntry]);
-const select = (table, entry) => query('SELECT * FROM ?? WHERE ?', [table, entry]);
-const exists = async (table, entry) => (await select(table, entry)).length > 0;
+const select = (table, entry, clause = '') => query('SELECT * FROM ?? WHERE ? ' + clause, [table, entry]);
+const exists = async (table, entry) => (await select(table, entry, 'LIMIT 1')).length > 0;
 
 module.exports = { query, insert, remove, update, select, exists };

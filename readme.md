@@ -35,6 +35,26 @@
 |  400  | text/plain | `"Incomplete form!"` |
 |  401  | text/plain |  `"Login failed!"`   |
 
+### `/api/admin/download/`：作业下载接口
+
+#### 请求
+
+`GET` 请求，参数如下：
+
+|           字段            |  类型  |    内容    |
+| :-----------------------: | :----: | :--------: |
+|          `*/:id`          | string |  作业编号  |
+| `Authorization`（请求头） | string | 管理员令牌 |
+
+#### 响应
+
+| 代码  |           类型           |            内容             |
+| :---: | :----------------------: | :-------------------------: |
+|  200  | application/octet-stream | 一个含有作业文件的 zip 文件 |
+|  401  |        text/plain        |     `"Invalid Token!"`      |
+|  404  |        text/plain        |   `"Homework not found!"`   |
+|  500  |        text/plain        |       服务器错误信息        |
+
 ### `/api/homework/list/`：作业列表获取接口
 
 #### 请求
