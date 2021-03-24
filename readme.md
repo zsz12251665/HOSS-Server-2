@@ -93,12 +93,13 @@
 
 #### 响应
 
-| 代码  |    类型    |             内容              |
-| :---: | :--------: | :---------------------------: |
-|  400  | text/plain |     `"Incomplete form!"`      |
-|  401  | text/plain |     `"No such student!"`      |
-|  401  | text/plain |     `"No such homework!"`     |
-|  501  | text/plain | `"Function not implemented!"` |
+| 代码  |    类型    |          内容          |
+| :---: | :--------: | :--------------------: |
+|  200  | text/plain | `"Homework uploaded!"` |
+|  400  | text/plain |  `"Incomplete form!"`  |
+|  403  | text/plain | `"Invalid filename!"`  |
+|  404  | text/plain |  `"No such student!"`  |
+|  404  | text/plain | `"No such homework!"`  |
 
 ### `/api/student/validate/`：学生信息验证接口
 
