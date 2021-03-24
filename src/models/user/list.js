@@ -22,7 +22,7 @@ const express = require('express');
 const router = express.Router();
 
 async function getList() {
-	return (await db.select('homeworks', {})).filter(item => item.deadline > Date.now());
+	return await db.query('SELECT * FROM homeworks WHERE `deadline` > CURRENT_TIMESTAMP');
 }
 
 async function getListWithStudentNumber(number) {

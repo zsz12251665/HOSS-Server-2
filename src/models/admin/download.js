@@ -30,15 +30,14 @@ async function processRequest(req, res) {
 	if (!await db.exists('homeworks', { id: homeworkId }))
 		throw { status: 404, message: 'Homework not found!' };
 	try {
-		const students = await db.select('students', {});
+		const students = await db.query('SELECT * FROM students');
 		const missingList = [];
 		const archive = archiver('zip');
 		archive.pipe(res);
 		for (const student of students) {
-			const submission = (await db.select('submissions', {
-				student: student.number,
-				homework: homeworkId
-			}, 'ORDER BY `time` DESC LIMIT 1'))[0];
+			const submission = (await db.query('SELECT * FROM submissions WHERE ? ORDER BY `time` DESC LIMIT 1', [
+				{ student: student.number, homework: homeworkId }
+			]))[0];
 			if (submission)
 				archive.file(path.resolve(config.savePath, submission.id), { name: submission.filename });
 			else
