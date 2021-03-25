@@ -1,7 +1,7 @@
 /*
 学生信息验证接口
 
-`/student`：POST 请求参数
+`/student`：POST 请求字段
 
 - name：学生姓名
 - number：学生学号

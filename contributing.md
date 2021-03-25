@@ -3,12 +3,8 @@
 ## 贡献前，请先
 
 - 执行 `git update-index --assume-unchanged src/config/*` 以避免您本地的配置文件影响代码仓库上的配置模板；
-- 配置 `src/config/` 中的配置文件
-  - `server.json` 配置服务端口
-  - `mysql.json` 配置您的 MySQL 服务器信息
-  - `admin.json` 配置管理员账号密码
-  - `jwt.json` 配置 JWT 令牌密钥及签发人
-- 运行 `npm install` 以安装依赖包。
+- 运行 `npm install` 以安装依赖包；
+- 执行 `npm run init` 以配置并初始化您的服务器。
 
 ## 源代码结构设计
 
@@ -26,6 +22,7 @@ src                     核心代码目录
 |
 |-- models              接口模型目录
 |   |-- admin           管理员接口目录
+|   |   |-- download.js 作业下载接口
 |   |   `-- login.js    管理员登录接口
 |   |
 |   `-- user            普通用户接口目录
@@ -34,6 +31,7 @@ src                     核心代码目录
 |       `-- validate.js 学生信息验证接口
 |
 |-- app.js              服务器入口
+|-- init.js             服务器初始化脚本
 `-- router.js           REST API 路由
 
 static                  静态资源目录（挂载在根目录下）

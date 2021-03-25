@@ -43,7 +43,8 @@ async function processRequest(req, res) {
 			else
 				missingList.push(student.name);
 		}
-		archive.append(JSON.stringify(missingList), { name: 'missingList.json' });
+		if (missingList.length)
+			archive.append(JSON.stringify(missingList), { name: 'missingList.json' });
 		archive.finalize();
 	} catch (err) {
 		console.log(err);

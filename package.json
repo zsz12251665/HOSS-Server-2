@@ -3,6 +3,7 @@
 	"version": "2.0.0",
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
+		"init": "node ./src/init.js",
 		"start": "node ./src/app.js"
 	},
 	"author": "zsz12251665",
@@ -16,6 +17,7 @@
 		"connect-multiparty": "^2.2.0",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
+		"inquirer": "^8.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"mysql": "^2.18.1"
 	},
