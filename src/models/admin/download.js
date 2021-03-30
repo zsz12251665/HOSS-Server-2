@@ -20,9 +20,7 @@ router.get('/:id', async (req, res) => {
 			const archive = archiver('zip');
 			archive.pipe(res);
 			for (const student of students) {
-				const submission = (await db.query('SELECT * FROM submissions WHERE ? ORDER BY `time` DESC LIMIT 1', [
-					{ student: student.number, homework: homeworkId }
-				]))[0];
+				const submission = (await db.query('SELECT * FROM submissions WHERE `student` = ? AND `homework` = ? ORDER BY `time` DESC LIMIT 1', [student.number, homeworkId]))[0];
 				if (submission)
 					archive.file(path.resolve(config.savePath, submission.id), { name: submission.filename });
 				else

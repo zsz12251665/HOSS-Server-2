@@ -54,7 +54,7 @@ router.delete('/:number', async (req, res) => {
 		return;
 	}
 	try {
-		await db.delete('students', oldEntry);
+		await db.remove('students', oldEntry);
 		res.status(204).send();
 	} catch (err) {
 		console.log(err);

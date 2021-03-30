@@ -14,10 +14,20 @@ const util = require('util');
 
 const pool = mysql.createPool(config); // MySQL 连接池
 
+function andStyleConvert(entry) {
+	return 'True'.concat(...Object.keys(entry).map(() => ' AND ?? = ?'));
+}
+
+function andStyleRearrange(res, entry) {
+	for (const key of Object.keys(entry))
+		res.push(key, entry[key]);
+	return res;
+}
+
 const query = util.promisify(pool.query).bind(pool);
 const insert = (table, entry) => query('INSERT INTO ?? SET ?', [table, entry]);
-const remove = (table, entry) => query('DELETE FROM ?? WHERE ?', [table, entry]);
-const update = (table, oldEntry, newEntry) => query('UPDATE ?? SET ? WHERE ?', [table, newEntry, oldEntry]);
-const exists = async (table, entry) => (await query('SELECT EXISTS(SELECT 1 FROM ?? WHERE ?) AS res', [table, entry]))[0].res;
+const remove = (table, entry) => query('DELETE FROM ?? WHERE ' + andStyleConvert(entry), andStyleRearrange([table], entry));
+const update = (table, oldEntry, newEntry) => query('UPDATE ?? SET ? WHERE ' + andStyleConvert(oldEntry), andStyleRearrange([table, newEntry], oldEntry));
+const exists = async (table, entry) => Boolean((await query('SELECT 1 FROM ?? WHERE ' + andStyleConvert(entry), andStyleRearrange([table], entry)))[0]);
 
 module.exports = { query, insert, remove, update, exists };

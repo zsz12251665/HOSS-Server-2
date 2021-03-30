@@ -18,8 +18,8 @@ async function saveFile(req) {
 	if (!new RegExp(homework.validator.replace('{name}', studentName).replace('{number}', studentNumber)).test(homeworkFilename))
 		return { status: 403, message: 'Invalid filename!' };
 	await db.insert('submissions', { student: studentNumber, homework: homeworkId, filename: homeworkFilename });
-	const submission = (await db.query('SELECT LAST_INSERT_ID() AS lastId'))[0];
-	fs.renameSync(homeworkFile.path, path.resolve(config.savePath, submission));
+	const submission = await db.query('SELECT MAX(`id`) AS lastId FROM `submissions` WHERE `student` = ? AND `homework` = ? AND `filename` = ?', [studentNumber, homeworkId, homeworkFilename]);
+	fs.renameSync(homeworkFile.path, path.resolve(config.savePath, String(submission[0].lastId)));
 	return { status: 200, message: 'Homework uploaded!' };
 }
 

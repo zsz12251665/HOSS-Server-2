@@ -9,9 +9,9 @@ async function getList() {
 
 async function getListWithStudentNumber(number) {
 	if (await db.exists('students', { number }))
-		return (await getList()).map(async item => Object.assign(item, {
+		return await Promise.all((await getList()).map(async item => Object.assign(item, {
 			submitted: await db.exists('submissions', { student: number, homework: item.id })
-		}));
+		})));
 	else
 		return getList();
 }
