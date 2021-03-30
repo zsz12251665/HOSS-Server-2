@@ -3,7 +3,7 @@
 ## 贡献前，请先
 
 - 执行 `git update-index --assume-unchanged src/config/*` 以避免您本地的配置文件影响代码仓库上的配置模板；
-- 运行 `npm install` 以安装依赖包；
+- 执行 `npm install` 以安装依赖包；
 - 执行 `npm run init` 以配置并初始化您的服务器。
 
 ## 源代码结构设计
@@ -64,8 +64,12 @@ CREATE TABLE submissions ( # 提交列表
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
   `filename` VARCHAR(255) NOT NULL COMMENT '作业文件名',
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`student`) REFERENCES students(`number`),
+  FOREIGN KEY (`student`) REFERENCES students(`number`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   FOREIGN KEY (`homework`) REFERENCES homeworks(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 ) CHARSET=utf8mb4;
 ```
 

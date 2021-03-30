@@ -15,7 +15,7 @@ async function initServer() { // 初始化服务器配置
 			name: 'savePath',
 			type: 'input',
 			message: 'File Save Path:',
-			validate: (input) => fs.existsSync(input) || 'The path does not exist!',
+			validate: input => fs.existsSync(input) || 'The path does not exist!',
 			filter: input => path.resolve(path.normalize(input))
 		}
 	]);
@@ -78,8 +78,12 @@ async function initMySQL() { // 初始化 MySQL 配置
 			\`time\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
 			\`filename\` VARCHAR(255) NOT NULL COMMENT '作业文件名',
 			PRIMARY KEY (\`id\`),
-			FOREIGN KEY (\`student\`) REFERENCES students(\`number\`),
+			FOREIGN KEY (\`student\`) REFERENCES students(\`number\`)
+				ON UPDATE CASCADE
+				ON DELETE CASCADE,
 			FOREIGN KEY (\`homework\`) REFERENCES homeworks(\`id\`)
+				ON UPDATE CASCADE
+				ON DELETE CASCADE
 		) CHARSET=utf8mb4`); // 提交列表
 	}
 }
