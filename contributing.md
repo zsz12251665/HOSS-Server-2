@@ -9,35 +9,39 @@
 ## 源代码结构设计
 
 ```plain
-src                     核心代码目录
-|-- components          组件目录
-|   |-- db.js           数据库组件（封装自 MySQL）
-|   `-- token.js        令牌组件（封装自 JsonWebToken）
+src                             核心代码目录
+|-- components                  组件目录
+|   |-- db.js                   数据库组件（封装自 MySQL）
+|   `-- token.js                令牌组件（封装自 JsonWebToken）
 |
-|-- config              配置目录
-|   |-- admin.json      管理员配置
-|   |-- jwt.json        JWT 配置
-|   |-- mysql.json      MySQL 配置
-|   `-- server.json     服务器配置
+|-- config                      配置目录
+|   |-- admin.json              管理员配置
+|   |-- jwt.json                JWT 配置
+|   |-- mysql.json              MySQL 配置
+|   `-- server.json             服务器配置
 |
-|-- models              接口模型目录
-|   |-- admin           管理员接口目录
-|   |   |-- download.js 作业下载接口
-|   |   `-- login.js    管理员登录接口
+|-- models                      接口模型目录
+|   |-- admin                   管理员接口目录
+|   |   |-- manage              信息操作接口目录
+|   |   |   |-- homework.js     作业信息操作接口
+|   |   |   `-- student.js      学生信息操作接口
+|   |   |
+|   |   |-- download.js         作业下载接口
+|   |   `-- login.js            管理员登录接口
 |   |
-|   `-- user            普通用户接口目录
-|       |-- list.js     作业列表获取接口
-|       |-- upload.js   作业上传接口
-|       `-- validate.js 学生信息验证接口
+|   `-- user                    普通用户接口目录
+|       |-- list.js             作业列表获取接口
+|       |-- upload.js           作业上传接口
+|       `-- validate.js         学生信息验证接口
 |
-|-- app.js              服务器入口
-|-- init.js             服务器初始化脚本
-`-- router.js           REST API 路由
+|-- app.js                      服务器入口
+|-- init.js                     服务器初始化脚本
+`-- router.js                   REST API 路由
 
-static                  静态资源目录（挂载在根目录下）
-|-- index.html          主页面（服务器启动标志）
-|-- login.html          管理员登录页面模板
-`-- upload.html         作业上传页面模板
+static                          静态资源目录（挂载在根目录下）
+|-- index.html                  主页面（服务器启动标志）
+|-- login.html                  管理员登录页面模板
+`-- upload.html                 作业上传页面模板
 ```
 
 ## 数据库结构设计

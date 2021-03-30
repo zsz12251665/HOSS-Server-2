@@ -21,4 +21,6 @@
 -  [`/api/homework/list/`：作业列表获取接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/作业列表获取接口)
 -  [`/api/homework/upload/`：作业上传接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/作业上传接口)
 -  [`/api/homework/download/`：作业下载接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/作业下载接口)
+-  [`/api/homework/manage/`：作业信息操作接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/作业信息操作接口)
+-  [`/api/student/manage/`：学生信息操作接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/学生信息操作接口)
 -  [`/api/student/validate/`：学生信息验证接口](https://github.com/zsz12251665/HOSS-Server-2/wiki/学生信息验证接口)
