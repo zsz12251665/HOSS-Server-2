@@ -19,7 +19,8 @@
 		"express": "^4.17.1",
 		"inquirer": "^8.0.0",
 		"jsonwebtoken": "^8.5.1",
-		"mysql": "^2.18.1"
+		"mysql": "^2.18.1",
+		"sequelize": "^6.6.5"
 	},
 	"devDependencies": {
 		"eslint": "^7.21.0"
