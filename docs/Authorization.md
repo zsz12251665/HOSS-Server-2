@@ -1,74 +1,55 @@
 # Authorization
 
-## Anyone
-
-- Register a new user
-- Login as a existing user
-
 ## User
 
-- Change their own username
-- Change their own password
+| URI                |             GET             |             PUT             |            PATCH            |           DELETE            |
+| ------------------ | :-------------------------: | :-------------------------: | :-------------------------: | :-------------------------: |
+| `/users`           |        Administrator        |        Administrator        |        Administrator        |        Administrator        |
+| `/users/:username` | Administrator<br />The User | Administrator<br />The User | Administrator<br />The User | Administrator<br />The User |
 
-## Administrator
-
-- Create users
-- Delete users
-- Assign student identity to a user
-- Assign teacher identity to a user
-- Grant administrator access to a user
-- Revoke administrator access from a user
-
-<hr />
-
-- List all students
-- Create students
-- Delete students
-- Modify information of a student
-
-<hr />
-
-- List all teachers
-- Create teachers
-- Delete teachers
-- Modify information of a teacher
-
-<hr />
-
-- List all courses
-- Create courses
-- Delete courses
-- Modify information of a course
-
-<hr />
-
-- Query the students taking a course
-- Query the courses taken by a student
-- Assign some students to take a course
-- Remove some students from taking a course
-
-<hr />
-
-- Query the teachers teaching a course
-- Query the courses taught by a teacher
-- Assign some teachers to teach a course
-- Remove some teachers from teaching a course
-
-## Teacher
-
-- List all course which he/she teaches
-- List all tasks under any course which he/she teaches
-- Query the tasks under a course
-- Add tasks under a course
-- Delete tasks under a course
-- Modify the information of a task
-- Edit the grouping of students of a task
-- Download homework files
-- Authorize some students to edit the grouping of students of a task
+| URI                      |  POST  |
+| ------------------------ | :----: |
+| `/users`                 | Anyone |
+| `/users/:username/token` | Anyone |
 
 ## Student
 
-- Query all tasks he/she has been assigned
-- Upload homework files
-- Download their own homework files
-- Edit the grouping of students of a task (only when authorized)
+| URI                                        |                           GET                           |      PUT      |                 PATCH                  |    DELETE     |
+| ------------------------------------------ | :-----------------------------------------------------: | :-----------: | :------------------------------------: | :-----------: |
+| `/students`                                |                      Administrator                      | Administrator |             Administrator              | Administrator |
+| `/students/:number`                        |             Administrator<br />The Student              | Administrator |             Administrator              | Administrator |
+| `/students/:number/courses`                |             Administrator<br />The Student              | Administrator |             Administrator              |      :x:      |
+| `/students/:number/supervisees`            |                       The Student                       |  **Nobody**   |               **Nobody**               |      :x:      |
+| `/students/:number/homeworks`              |                       The Student                       |      :x:      |               **Nobody**               |      :x:      |
+| `/students/:number/homeworks/:taskID`      | The Student<br />Related Teachers<br />Related Monitors |      :x:      | Related Teachers<br />Related Monitors |      :x:      |
+| `/students/:number/homeworks/:taskID/file` |            The Student<br />Related Teachers            |  The Student  |                  :x:                   |      :x:      |
+
+## Teacher
+
+| URI                            |              GET               |      PUT      |     PATCH     |    DELETE     |
+| ------------------------------ | :----------------------------: | :-----------: | :-----------: | :-----------: |
+| `/teachers`                    |         Administrator          | Administrator | Administrator | Administrator |
+| `/teachers/:teacherID`         | Administrator<br />The Teacher | Administrator | Administrator | Administrator |
+| `/teachers/:teacherID/courses` | Administrator<br />The Teacher | Administrator | Administrator |      :x:      |
+
+## Course
+
+| URI                           |                            GET                            |       PUT        |      PATCH       |    DELETE     |
+| ----------------------------- | :-------------------------------------------------------: | :--------------: | :--------------: | :-----------: |
+| `/courses`                    | Administrator<br />Related Teachers<br />Related Students |  Administrator   |  Administrator   | Administrator |
+| `/courses/:courseID`          | Administrator<br />Related Teachers<br />Related Students |  Administrator   |  Administrator   | Administrator |
+| `/courses/:courseID/students` | Administrator<br />Related Teachers<br />Related Students |  Administrator   |  Administrator   |      :x:      |
+| `/courses/:courseID/tasks`    |          Related Teachers<br />Related Students           | Related Teachers | Related Teachers |      :x:      |
+| `/courses/:courseID/teachers` | Administrator<br />Related Teachers<br />Related Students |  Administrator   |  Administrator   |      :x:      |
+
+## Task
+
+| URI                                     |                             GET                              |       PUT        |                 PATCH                  |      DELETE      |
+| --------------------------------------- | :----------------------------------------------------------: | :--------------: | :------------------------------------: | :--------------: |
+| `/tasks`                                | Related Teachers<br />Related Students<br />Related Monitors | Related Teachers |            Related Teachers            | Related Teachers |
+| `/tasks/:taskID`                        | Related Teachers<br />Related Students<br />Related Monitors | Related Teachers |            Related Teachers            | Related Teachers |
+| `/tasks/:taskID/files`                  |                       Related Teachers                       |       :x:        |                  :x:                   |       :x:        |
+| `/tasks/:taskID/homeworks`              | Related Teachers<br />Related Students<br />Related Monitors |       :x:        | Related Teachers<br />Related Monitors |       :x:        |
+| `/tasks/:taskID/homeworks/:number`      |   The Student<br />Related Teachers<br />Related Monitors    |       :x:        | Related Teachers<br />Related Monitors |       :x:        |
+| `/tasks/:taskID/homeworks/:number/file` |              The Student<br />Related Teachers               |   The Student    |                  :x:                   |       :x:        |
+| `/tasks/:taskID/monitors`               | Related Teachers<br />Related Students<br />Related Monitors | Related Teachers |            Related Teachers            |       :x:        |
