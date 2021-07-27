@@ -1,4 +1,6 @@
-const config = require('./config/server.json');
+require('module-alias/register');
+
+const config = require('@config/server.json');
 const express = require('express');
 const cors = require('cors');
 const multiparty = require('connect-multiparty');

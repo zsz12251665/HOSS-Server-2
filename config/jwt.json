@@ -1,6 +1,6 @@
 {
-	"secret": "[JWT Secret]",
-	"issuer": "[JWT Issuer]",
+	"secret": "",
+	"issuer": "",
 	"options": {
 		"userToken": {
 			"algorithm": "HS256",

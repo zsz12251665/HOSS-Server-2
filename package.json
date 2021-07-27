@@ -3,7 +3,7 @@
 	"version": "2.0.0",
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
-		"init": "node ./src/init.js",
+		"config": "node ./src/config.js",
 		"start": "node ./src/app.js"
 	},
 	"author": "zsz12251665",
@@ -19,10 +19,15 @@
 		"express": "^4.17.1",
 		"inquirer": "^8.0.0",
 		"jsonwebtoken": "^8.5.1",
-		"mysql": "^2.18.1",
+		"module-alias": "^2.2.2",
 		"sequelize": "^6.6.5"
 	},
 	"devDependencies": {
 		"eslint": "^7.21.0"
+	},
+	"_moduleAliases": {
+		"@": "./src",
+		"@components": "./src/components",
+		"@config": "./config"
 	}
 }

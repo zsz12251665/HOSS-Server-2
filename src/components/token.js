@@ -1,18 +1,27 @@
-/*
-token 模块：JsonWebToken 令牌签发及验证
+/**
+ * 基于 JsonWebToken 的令牌签发及验证模块
+ * @module token
+ */
 
-- token.encode(payload: object, option: string = 'default'): string：使用名为 option 的配置签发令牌
-- token.decode(token: string): object | null：解密令牌（若失败则返回 null）
-*/
-
-const config = require('../config/jwt.json');
+const config = require('@config/jwt.json');
 const jwt = require('jsonwebtoken');
 
-function encode(payload, option = 'default') {
+/**
+ * 使用给定配置签发令牌
+ * @param {object} content 要签发的令牌内容
+ * @param {string} option 要签发的令牌配置名
+ * @returns {string} 签发的令牌内容
+ */
+function encode(content, option = 'default') {
 	const signOption = Object.assign({ issuer: config.issuer }, config.options[option]);
-	return jwt.sign(payload, config.secret, signOption);
+	return jwt.sign(content, config.secret, signOption);
 }
 
+/**
+ * 解密令牌
+ * @param {string} token 签发的令牌内容
+ * @returns {object, null} 返回 null 时表示令牌失效，否则返回令牌内容
+ */
 function decode(token) {
 	try {
 		return jwt.verify(token, config.secret, { issuer: config.issuer });
@@ -21,12 +30,4 @@ function decode(token) {
 	}
 }
 
-function authorizationController(req, res, next) {
-	const adminToken = req.get('Authorization');
-	if (decode(adminToken) === null)
-		res.status(401).type('text/plain').send('Invalid Token!');
-	else
-		next();
-}
-
-module.exports = { encode, decode, authorizationController };
+module.exports = { encode, decode };
