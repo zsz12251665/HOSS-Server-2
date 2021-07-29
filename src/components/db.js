@@ -5,7 +5,7 @@
 
 const config = require('@config/db.json');
 const { Sequelize, DataTypes } = require('sequelize');
-const { createHash } = require('crypto');
+const hash = require('@components/hash');
 
 const sequelize = new Sequelize(config);
 
@@ -21,10 +21,8 @@ const User = sequelize.define('User', {
 	certificate: {
 		type: DataTypes.STRING,
 		allowNull: false,
-		set(value) { // 使用 SHA256 对密码域进行加密
-			const generator = createHash('sha256');
-			generator.update(value);
-			this.setDataValue('certificate', generator.digest('hex'));
+		set(value) {
+			this.setDataValue('certificate', hash(value));
 		}
 	},
 	isAdministrator: {
@@ -123,14 +121,4 @@ Homework.belongsTo(Student);
 Task.hasMany(Homework); // Complete
 Homework.belongsTo(Task);
 
-/** 检测数据库连接 */
-function test() {
-	return sequelize.authenticate();
-}
-
-/** 清空并重新初始化数据库 */
-function clear() {
-	return sequelize.sync({ force: true });
-}
-
-module.exports = { User, Student, Teacher, Course, Task, Homework, test, clear };
+module.exports = { User, Student, Teacher, Course, Task, Homework };

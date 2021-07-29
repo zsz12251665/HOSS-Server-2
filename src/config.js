@@ -85,6 +85,12 @@ async function initializeDB() {
 		]);
 		try {
 			await new Sequelize(config).authenticate();
+			Object.assign(config, {
+				logging: false,
+				define: {
+					timestamps: false
+				}
+			});
 			fs.writeFileSync('config/db.json', JSON.stringify(config, null, '\t'));
 			console.log('DB Config Updated!');
 			break;
@@ -99,8 +105,8 @@ async function initializeDB() {
 		message: 'Initialize DB?'
 	}]);
 	if (needInitialization) {
-		const db = require('@components/db');
-		await db.clear();
+		const { User } = require('@components/db');
+		await User.sequelize.sync({ force: true });
 		const administratorProfile = await inquirer.prompt([
 			{
 				name: 'identification',
@@ -114,7 +120,7 @@ async function initializeDB() {
 				message: 'Administrator Password:'
 			}
 		]);
-		db.User.build(Object.assign({ isAdministrator: true }, administratorProfile));
+		await User.create(Object.assign({ isAdministrator: true }, administratorProfile));
 		console.log('DB Initialization Complete!');
 	}
 }
@@ -173,8 +179,8 @@ async function main() {
 			name: 'action',
 			type: 'list',
 			message: 'Which Config?',
-			choices: ['Server', 'DB', 'JWT', 'Exit'],
-			default: 'exit'
+			choices: ['Server', 'DB', 'JWT', new inquirer.Separator(), 'Exit'],
+			default: 'Exit'
 		}]);
 		switch (action) {
 		case 'Server':
@@ -188,9 +194,9 @@ async function main() {
 			break;
 		case 'Exit':
 			process.exit();
-			break;
 		}
 	}
 }
 
-main();
+if (require.main === module)
+	main();

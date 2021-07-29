@@ -4,6 +4,7 @@
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
 		"config": "node ./src/config.js",
+		"postinstall": "npm run config",
 		"start": "node ./src/app.js"
 	},
 	"author": "zsz12251665",
@@ -24,6 +25,14 @@
 	},
 	"devDependencies": {
 		"eslint": "^7.21.0"
+	},
+	"optionalDependencies": {
+		"mariadb": "*",
+		"mysql2": ">1.5.2",
+		"pg": ">7.0.0",
+		"pg-hstore": "*",
+		"sqlite3": ">4.0.0",
+		"tedious": ">6.0.0"
 	},
 	"_moduleAliases": {
 		"@": "./src",
