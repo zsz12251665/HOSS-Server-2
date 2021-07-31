@@ -15,15 +15,15 @@ config                          配置目录
 
 src                             核心代码目录
 |-- components                  组件目录
-|   |-- db.js                   数据库模块（封装自 Sequelize）
-|   |-- hash.js                 哈希函数模块（封装自 crypto）
-|   `-- token.js                令牌模块（封装自 JsonWebToken）
+|   |-- hash.ts                 哈希函数模块（封装自 crypto）
+|   |-- JWT.ts                  令牌模块（封装自 JsonWebToken）
+|   `-- ORM.ts                   数据库模块（封装自 Sequelize）
 |
 |-- models                      接口模型目录
 |
-|-- app.js                      服务器入口
-|-- config.js                   服务器配置脚本
-`-- router.js                   REST API 路由
+|-- app.ts                      服务器入口
+|-- config.ts                   服务器配置脚本
+`-- router.ts                   REST API 路由
 
 static                          静态资源目录（挂载在根目录下）
 `-- index.html                  主页面（服务器启动标志）
