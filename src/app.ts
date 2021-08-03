@@ -1,4 +1,4 @@
-require('module-alias/register')
+import 'module-alias/register'
 import express from 'express'
 import cors from 'cors'
 import config from '@config/server.json'

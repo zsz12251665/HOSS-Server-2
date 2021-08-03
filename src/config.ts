@@ -1,4 +1,4 @@
-require('module-alias/register')
+import 'module-alias/register'
 import { prompt as ask, Separator } from 'inquirer'
 import fs from 'fs'
 import path from 'path'
@@ -24,7 +24,7 @@ async function updateServer(): Promise<void> {
 async function updateDB(): Promise<void> {
 	const configPath = 'config/db.json'
 	const defaultConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
-	for (;;) {
+	for (; ;) {
 		console.log('----- DB Config -----')
 		const config = await ask([
 			{
@@ -32,45 +32,46 @@ async function updateDB(): Promise<void> {
 				type: 'list',
 				message: 'Dialect:',
 				choices: ['mariadb', 'mssql', 'mysql', 'postgres', 'sqlite'],
-				default: defaultConfig.dialect || 'mysql'
+				default: defaultConfig.dialect || 'mysql',
 			}, {
 				name: 'host',
 				type: 'input',
-				when: answers => answers.dialect !== 'sqlite',
+				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Hostname:',
 				default: defaultConfig.host || 'localhost'
 			}, {
 				name: 'port',
 				type: 'number',
-				when: answers => answers.dialect !== 'sqlite',
+				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Port:',
 				default: defaultConfig.port || 3306
 			}, {
 				name: 'username',
 				type: 'input',
-				when: answers => answers.dialect !== 'sqlite',
+				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Username:',
 				default: defaultConfig.username || 'root'
 			}, {
 				name: 'password',
 				type: 'password',
 				mask: '*',
-				when: answers => answers.dialect !== 'sqlite',
+				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Password:',
 				default: defaultConfig.password || undefined
 			}, {
 				name: 'database',
 				type: 'input',
-				when: answers => answers.dialect !== 'sqlite',
+				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Database:',
 				default: defaultConfig.database || undefined,
-				validate: input => input ? true : 'Database should not be empty!'
+				validate: (input) => input ? true : 'Database should not be empty!'
 			}, {
 				name: 'storage',
 				type: 'input',
-				when: answers => answers.dialect === 'sqlite',
+				when: (answers) => answers.dialect === 'sqlite',
 				message: 'Storage:',
-				default: defaultConfig.storage || ':memory:'
+				default: defaultConfig.storage || ':memory:',
+				filter: (input) => input === ':memory:' ? input : path.resolve(path.normalize(input))
 			}
 		])
 		try {
@@ -128,7 +129,7 @@ async function updateJWT(): Promise<void> {
 			name: 'secret',
 			type: 'password',
 			mask: '*',
-			when: answers => !answers.useRandomSecret,
+			when: (answers) => !answers.useRandomSecret,
 			message: 'JWT Secret:',
 			default: defaultConfig.secret || undefined
 		}, {
@@ -163,7 +164,7 @@ async function main(): Promise<void> {
 		await updateJWT()
 		console.log('Config Initialization Complete!')
 	}
-	for (;;) {
+	for (; ;) {
 		const { action } = await ask([{
 			name: 'action',
 			type: 'list',
