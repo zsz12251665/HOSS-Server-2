@@ -4,6 +4,7 @@
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
 		"config": "ts-node ./src/config.ts",
+		"purge": "rm -r temp dist migrations",
 		"start": "ts-node ./src/app.ts",
 		"test": "nodemon ./src/app.ts"
 	},
@@ -16,13 +17,15 @@
 	"dependencies": {
 		"@koa/cors": "^3.1.0",
 		"@koa/router": "^10.1.0",
+		"@mikro-orm/core": "^4.5.7",
+		"@mikro-orm/migrations": "^4.5.7",
+		"@mikro-orm/reflection": "^4.5.7",
 		"inquirer": "^8.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"koa": "^2.13.1",
 		"koa-body": "^4.2.0",
 		"koa-static": "^5.0.0",
-		"module-alias": "^2.2.2",
-		"sequelize": "^6.6.5"
+		"module-alias": "^2.2.2"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^7.3.3",
@@ -36,12 +39,10 @@
 		"typescript": "^4.3.5"
 	},
 	"optionalDependencies": {
-		"mariadb": "*",
-		"mysql2": ">1.5.2",
-		"pg": ">7.0.0",
-		"pg-hstore": "*",
-		"sqlite3": ">4.0.0",
-		"tedious": ">6.0.0"
+		"@mikro-orm/mariadb": "^4.5.7",
+		"@mikro-orm/mysql": "^4.5.7",
+		"@mikro-orm/postgresql": "^4.5.7",
+		"@mikro-orm/sqlite": "^4.5.7"
 	},
 	"_moduleAliases": {
 		"@": "./src/components",

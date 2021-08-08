@@ -1,9 +1,10 @@
 import 'module-alias/register'
-import { prompt as ask, Separator } from 'inquirer'
-import fs from 'fs'
-import path from 'path'
 import { randomBytes } from 'crypto'
-import { Sequelize } from 'sequelize'
+import fs from 'fs'
+import { prompt as ask, Separator } from 'inquirer'
+import path from 'path'
+import ORM, { User } from '@/ORM'
+import hash from '@/hash'
 
 /** 服务器配置 */
 async function updateServer(): Promise<void> {
@@ -14,13 +15,14 @@ async function updateServer(): Promise<void> {
 		name: 'port',
 		type: 'number',
 		message: 'Server Port:',
-		default: defaultConfig.port || 80
+		default: defaultConfig.port || 80,
+		validate: (input) => input ? true : 'Port should not be empty!'
 	}])
 	fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
-	console.log('Server Config Updated!')
+	console.log('Server config is up to date!')
 }
 
-/** Sequelize 配置 */
+/** MikroORM 配置 */
 async function updateDB(): Promise<void> {
 	const configPath = 'config/db.json'
 	const defaultConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
@@ -28,75 +30,67 @@ async function updateDB(): Promise<void> {
 		console.log('----- DB Config -----')
 		const config = await ask([
 			{
-				name: 'dialect',
+				name: 'type',
 				type: 'list',
 				message: 'Dialect:',
-				choices: ['mariadb', 'mssql', 'mysql', 'postgres', 'sqlite'],
-				default: defaultConfig.dialect || 'mysql',
+				choices: ['mariadb', 'mysql', 'postgresql', 'sqlite'],
+				default: defaultConfig.type || 'mysql',
 			}, {
 				name: 'host',
 				type: 'input',
-				when: (answers) => answers.dialect !== 'sqlite',
-				message: 'Hostname:',
-				default: defaultConfig.host || 'localhost'
+				when: (answers) => answers.type !== 'sqlite',
+				message: 'Host:',
+				default: defaultConfig.host || 'localhost',
+				validate: (input) => input ? true : 'Host should not be empty!'
 			}, {
 				name: 'port',
 				type: 'number',
-				when: (answers) => answers.dialect !== 'sqlite',
+				when: (answers) => answers.type !== 'sqlite',
 				message: 'Port:',
-				default: defaultConfig.port || 3306
+				default: defaultConfig.port || 3306,
+				validate: (input) => input ? true : 'Port should not be empty!'
 			}, {
-				name: 'username',
+				name: 'user',
 				type: 'input',
-				when: (answers) => answers.dialect !== 'sqlite',
+				when: (answers) => answers.type !== 'sqlite',
 				message: 'Username:',
-				default: defaultConfig.username || 'root'
+				default: defaultConfig.username || 'root',
+				validate: (input) => input ? true : 'Username should not be empty!'
 			}, {
 				name: 'password',
 				type: 'password',
 				mask: '*',
-				when: (answers) => answers.dialect !== 'sqlite',
+				when: (answers) => answers.type !== 'sqlite',
 				message: 'Password:',
-				default: defaultConfig.password || undefined
+				default: defaultConfig.password
 			}, {
-				name: 'database',
+				name: 'dbName',
 				type: 'input',
-				when: (answers) => answers.dialect !== 'sqlite',
 				message: 'Database:',
-				default: defaultConfig.database || undefined,
-				validate: (input) => input ? true : 'Database should not be empty!'
-			}, {
-				name: 'storage',
-				type: 'input',
-				when: (answers) => answers.dialect === 'sqlite',
-				message: 'Storage:',
-				default: defaultConfig.storage || ':memory:',
-				filter: (input) => input === ':memory:' ? input : path.resolve(path.normalize(input))
+				default: defaultConfig.dbName,
+				validate: (input) => input ? true : 'Database should not be empty!',
+				filter: (input, answers) => answers.type === 'sqlite' && input !== ':memory:' ? path.resolve(path.normalize(input)) : input
 			}
 		])
-		try {
-			await new Sequelize(config).authenticate()
-			Object.assign(config, {
-				logging: false,
-				define: {
-					timestamps: false
-				}
-			})
+		const orm = await ORM(config)
+		if (orm.isConnected()) {
+			console.log('Connect to the data server successfully!')
 			fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
+			console.log('DB config is up to date!')
 			break
-		} catch (err) {
-			console.error(err)
-			Object.assign(defaultConfig, config)
-		}
+		} else
+			console.error('Fail to connect to the data server!')
 	}
-	const { needInitialization } = await ask([{
-		name: 'needInitialization',
-		type: 'confirm',
-		message: 'Initialize DB?'
-	}])
-	if (needInitialization) {
-		const { User } = await import('@/ORM')
-		await User.sequelize?.sync({ force: true })
+	const orm = await ORM()
+	const migrator = orm.getMigrator()
+	const initialized = (await migrator.getExecutedMigrations()).length + (await migrator.getPendingMigrations()).length
+	if (!initialized) {
+		console.log('Creating initial migration...')
+		await migrator.createInitialMigration()
+		console.log('Applying migration(s)...')
+		await migrator.up()
+		console.log('Database initialization complete!')
+		console.log('Creating the first administrator...')
 		const administrator = await ask([
 			{
 				name: 'identification',
@@ -107,11 +101,22 @@ async function updateDB(): Promise<void> {
 				name: 'certificate',
 				type: 'password',
 				mask: '*',
-				message: 'Administrator Password:'
+				message: 'Administrator Password:',
+				filter: (input) => hash(input)
 			}
 		])
-		await User.create(Object.assign(administrator, { isAdministrator: true }))
-		console.log('DB Initialization Complete!')
+		await orm.em.persistAndFlush(orm.em.create(User, Object.assign(administrator, { isAdministrator: true })))
+	} else {
+		const { updateSchema } = await ask([{
+			name: 'updateSchema',
+			type: 'confirm',
+			message: 'Update Schema?'
+		}])
+		if (updateSchema) {
+			await migrator.createMigration()
+			await migrator.up()
+			console.log('Database schema is up to date!')
+		}
 	}
 }
 
@@ -131,12 +136,12 @@ async function updateJWT(): Promise<void> {
 			mask: '*',
 			when: (answers) => !answers.useRandomSecret,
 			message: 'JWT Secret:',
-			default: defaultConfig.secret || undefined
+			default: defaultConfig.secret
 		}, {
 			name: 'issuer',
 			type: 'input',
 			message: 'JWT Issuer:',
-			default: defaultConfig.issuer || undefined
+			default: defaultConfig.issuer
 		}
 	])
 	if (config.useRandomSecret)
@@ -153,7 +158,7 @@ async function updateJWT(): Promise<void> {
 		}
 	}
 	fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
-	console.log('JWT Config Updated!')
+	console.log('JWT config is up to date!')
 }
 
 async function main(): Promise<void> {
@@ -168,7 +173,7 @@ async function main(): Promise<void> {
 		const { action } = await ask([{
 			name: 'action',
 			type: 'list',
-			message: 'Which Config?',
+			message: 'Which Config to Modify?',
 			choices: ['Server', 'DB', 'JWT', new Separator(), 'Exit'],
 			default: 'Exit'
 		}])
