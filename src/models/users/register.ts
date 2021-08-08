@@ -1,18 +1,16 @@
-import { Request, Response } from 'express'
+import { Context } from 'koa'
 import { User } from '@/ORM'
-import { armour, HTTPResponse } from '@models/armour'
 
-export async function registerMiddleware(req: Request, res: Response): Promise<any> {
-	const { username, password } = req.body
+export default async function registerMiddleware(ctx: Context): Promise<any> {
+	const { username, password } = ctx.request.body
 	if (!username || !password)
-		throw new HTTPResponse(400, 'The username and password should not be empty!')
+		ctx.throw(400, 'The username and password should not be empty!')
 	const user = await User.findByPk(username)
 	if (user)
-		throw new HTTPResponse(403, 'The username has been taken!')
+		ctx.throw(403, 'The username has been taken!')
 	else {
 		await User.create({ identification: username, certificate: password })
-		return new HTTPResponse(201, `User ${username} has been created!`)
+		ctx.status = 201
+		ctx.body = `User ${username} has been created!`
 	}
 }
-
-export default armour(registerMiddleware)

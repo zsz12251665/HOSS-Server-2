@@ -1,10 +1,9 @@
-import { Router } from 'express'
+import Router from '@koa/router'
 import loginMiddleware from '@models/users/login'
 import registerMiddleware from '@models/users/register'
 
-const router = Router()
+const router = new Router()
 
-// 在此处转发 /api 的请求
 router.post('/login', loginMiddleware)
 router.post('/register', registerMiddleware)
 router.post('/users', registerMiddleware)

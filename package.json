@@ -1,6 +1,6 @@
 {
 	"name": "hoss-server",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
 		"config": "ts-node ./src/config.ts",
@@ -14,19 +14,23 @@
 		"url": "https://github.com/zsz12251665/HOSS-Server-2.git"
 	},
 	"dependencies": {
-		"cors": "^2.8.5",
-		"express": "^4.17.1",
+		"@koa/cors": "^3.1.0",
+		"@koa/router": "^10.1.0",
 		"inquirer": "^8.0.0",
 		"jsonwebtoken": "^8.5.1",
+		"koa": "^2.13.1",
+		"koa-body": "^4.2.0",
+		"koa-static": "^5.0.0",
 		"module-alias": "^2.2.2",
-		"reflect-metadata": "^0.1.13",
 		"sequelize": "^6.6.5"
 	},
 	"devDependencies": {
-		"@types/cors": "^2.8.12",
-		"@types/express": "^4.17.13",
 		"@types/inquirer": "^7.3.3",
 		"@types/jsonwebtoken": "^8.5.4",
+		"@types/koa": "^2.13.4",
+		"@types/koa__cors": "^3.0.3",
+		"@types/koa__router": "^8.0.7",
+		"@types/koa-static": "^4.0.2",
 		"@types/node": "^16.4.7",
 		"ts-node": "^10.1.0",
 		"typescript": "^4.3.5"
