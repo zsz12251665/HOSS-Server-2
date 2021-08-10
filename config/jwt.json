@@ -1,14 +1,4 @@
 {
 	"secret": "",
-	"issuer": "",
-	"options": {
-		"userToken": {
-			"algorithm": "HS256",
-			"expiresIn": "2h"
-		},
-		"default": {
-			"algorithm": "HS256",
-			"expiresIn": "15min"
-		}
-	}
+	"issuer": ""
 }

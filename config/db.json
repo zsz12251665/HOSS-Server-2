@@ -1,13 +1,8 @@
 {
-	"dialect": "mysql",
+	"type": "mysql",
 	"host": "localhost",
 	"port": 3306,
-	"username": "root",
+	"user": "root",
 	"password": "",
-	"database": "",
-	"storage": ":memory:",
-	"logging": false,
-	"define": {
-		"timestamps": false
-	}
+	"dbName": ""
 }

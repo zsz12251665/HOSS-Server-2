@@ -1,15 +1,16 @@
 import 'module-alias/register'
 import { randomBytes } from 'crypto'
-import fs from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { prompt as ask, Separator } from 'inquirer'
-import path from 'path'
 import ORM, { User } from '@/ORM'
 import hash from '@/hash'
 
 /** 服务器配置 */
-async function updateServer(): Promise<void> {
+async function updateServer(isInitializing: boolean = false): Promise<void> {
 	const configPath = 'config/server.json'
-	const defaultConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
+	if (isInitializing && defaultConfig.port)
+		return
 	console.log('----- Server Config -----')
 	const config = await ask([{
 		name: 'port',
@@ -18,14 +19,16 @@ async function updateServer(): Promise<void> {
 		default: defaultConfig.port || 80,
 		validate: (input) => input ? true : 'Port should not be empty!'
 	}])
-	fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
+	writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 	console.log('Server config is up to date!')
 }
 
 /** MikroORM 配置 */
-async function updateDB(): Promise<void> {
+async function updateDB(isInitializing: boolean = false): Promise<void> {
 	const configPath = 'config/db.json'
-	const defaultConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
+	if (isInitializing && defaultConfig.dbName)
+		return
 	for (; ;) {
 		console.log('----- DB Config -----')
 		const config = await ask([
@@ -62,20 +65,18 @@ async function updateDB(): Promise<void> {
 				mask: '*',
 				when: (answers) => answers.type !== 'sqlite',
 				message: 'Password:',
-				default: defaultConfig.password
+				default: defaultConfig.password || undefined
 			}, {
 				name: 'dbName',
 				type: 'input',
 				message: 'Database:',
-				default: defaultConfig.dbName,
+				default: defaultConfig.dbName || undefined,
 				validate: (input) => input ? true : 'Database should not be empty!',
-				filter: (input, answers) => answers.type === 'sqlite' && input !== ':memory:' ? path.resolve(path.normalize(input)) : input
 			}
 		])
-		const orm = await ORM(config)
-		if (orm.isConnected()) {
+		if ((await ORM(config)).isConnected()) {
 			console.log('Connect to the data server successfully!')
-			fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
+			writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 			console.log('DB config is up to date!')
 			break
 		} else
@@ -121,54 +122,34 @@ async function updateDB(): Promise<void> {
 }
 
 /** JWT 配置 */
-async function updateJWT(): Promise<void> {
+async function updateJWT(isInitializing: boolean = false): Promise<void> {
 	const configPath = 'config/jwt.json'
-	const defaultConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
+	if (isInitializing && defaultConfig.secret)
+		return
 	console.log('----- JWT Config -----')
 	const config = await ask([
 		{
-			name: 'useRandomSecret',
-			type: 'confirm',
-			message: 'Use Random JWT Secret?'
-		}, {
 			name: 'secret',
-			type: 'password',
-			mask: '*',
-			when: (answers) => !answers.useRandomSecret,
-			message: 'JWT Secret:',
-			default: defaultConfig.secret
+			type: 'input',
+			message: 'JWT Secret (Leave it blank to use a random secret):',
+			default: defaultConfig.secret || undefined,
+			filter: (input) => input || randomBytes(16).toString('hex')
 		}, {
 			name: 'issuer',
 			type: 'input',
 			message: 'JWT Issuer:',
-			default: defaultConfig.issuer
+			default: defaultConfig.issuer || undefined
 		}
 	])
-	if (config.useRandomSecret)
-		config.secret = randomBytes(16).toString('hex')
-		delete config.useRandomSecret
-	config.options = {
-		userToken: {
-			algorithm: 'HS256',
-			expiresIn: '2h'
-		},
-		default: {
-			algorithm: 'HS256',
-			expiresIn: '15min'
-		}
-	}
-	fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'))
+	writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 	console.log('JWT config is up to date!')
 }
 
 async function main(): Promise<void> {
-	if (!JSON.parse(fs.readFileSync('config/jwt.json', 'utf-8')).secret) {
-		console.log('Initializing...')
-		await updateServer()
-		await updateDB()
-		await updateJWT()
-		console.log('Config Initialization Complete!')
-	}
+	await updateServer(true)
+	await updateDB(true)
+	await updateJWT(true)
 	for (; ;) {
 		const { action } = await ask([{
 			name: 'action',

@@ -1,4 +1,5 @@
 import config from '@config/jwt.json'
+import options from './options'
 import jwt from 'jsonwebtoken'
 
 /**
@@ -8,10 +9,7 @@ import jwt from 'jsonwebtoken'
  * @returns {string} 签发的令牌内容
  */
 export function encode(content: object, option: string = 'default'): string {
-	interface IOptions {
-		[key: string]: object
-	}
-	const signOption = Object.assign({ issuer: config.issuer }, (<IOptions>config.options)[option] ?? config.options['default'])
+	const signOption = Object.assign({ issuer: config.issuer }, options.get(options.has(option) ? option : 'default'))
 	return jwt.sign(content, config.secret, signOption)
 }
 
