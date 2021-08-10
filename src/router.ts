@@ -1,6 +1,7 @@
 import Router from '@koa/router'
-import loginMiddleware from '@models/users/login'
-import registerMiddleware from '@models/users/register'
+import tokenMiddleware from '@models/token'
+import { getUserMultipleMiddleware, getUserSingleMiddleware } from '@models/users/get'
+import { loginMiddleware, registerMiddleware } from '@models/users/post'
 
 const router = new Router()
 
@@ -8,5 +9,10 @@ router.post('/login', loginMiddleware)
 router.post('/register', registerMiddleware)
 router.post('/users', registerMiddleware)
 router.post('/users/:username/token', loginMiddleware)
+
+router.use(tokenMiddleware)
+
+router.get('/users', getUserMultipleMiddleware)
+router.get('/users/:username', getUserSingleMiddleware)
 
 export default router

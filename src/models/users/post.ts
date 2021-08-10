@@ -1,10 +1,10 @@
-import { Context } from 'koa'
-import { User } from '@/ORM'
 import hash from '@/hash'
 import { encode } from '@/JWT'
+import { User } from '@/ORM'
 import { EntityManager } from '@mikro-orm/core'
+import { Context } from 'koa'
 
-export default async function loginMiddleware(ctx: Context): Promise<any> {
+export async function loginMiddleware(ctx: Context) {
 	const { username, password, tokenType } = ctx.request.body
 	if (!username || !password)
 		ctx.throw(400, 'The username and password should not be empty!')
@@ -20,4 +20,19 @@ export default async function loginMiddleware(ctx: Context): Promise<any> {
 		ctx.body = encode({ username, tokenType }, tokenType ?? 'userToken')
 	} else
 		ctx.throw(403, 'The username or password is incorrect!')
+}
+
+export async function registerMiddleware(ctx: Context) {
+	const { username, password } = ctx.request.body
+	if (!username || !password)
+		ctx.throw(400, 'The username and password should not be empty!')
+	const em: EntityManager = ctx.em
+	const user = await em.findOne(User, { identification: username })
+	if (user)
+		ctx.throw(403, 'The username has been taken!')
+	else {
+		await em.persistAndFlush(em.create(User, { identification: username, certificate: hash(password) }))
+		ctx.status = 201
+		ctx.body = `User ${username} has been created!`
+	}
 }

@@ -1,12 +1,12 @@
 import 'module-alias/register'
+import hash from '@/hash'
+import ORM, { User } from '@/ORM'
 import { randomBytes } from 'crypto'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { prompt as ask, Separator } from 'inquirer'
-import ORM, { User } from '@/ORM'
-import hash from '@/hash'
 
 /** 服务器配置 */
-async function updateServer(isInitializing: boolean = false): Promise<void> {
+async function updateServer(isInitializing: boolean = false) {
 	const configPath = 'config/server.json'
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	if (isInitializing && defaultConfig.port)
@@ -24,7 +24,7 @@ async function updateServer(isInitializing: boolean = false): Promise<void> {
 }
 
 /** MikroORM 配置 */
-async function updateDB(isInitializing: boolean = false): Promise<void> {
+async function updateDB(isInitializing: boolean = false) {
 	const configPath = 'config/db.json'
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	if (isInitializing && defaultConfig.dbName)
@@ -122,7 +122,7 @@ async function updateDB(isInitializing: boolean = false): Promise<void> {
 }
 
 /** JWT 配置 */
-async function updateJWT(isInitializing: boolean = false): Promise<void> {
+async function updateJWT(isInitializing: boolean = false) {
 	const configPath = 'config/jwt.json'
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	if (isInitializing && defaultConfig.secret)
@@ -146,7 +146,7 @@ async function updateJWT(isInitializing: boolean = false): Promise<void> {
 	console.log('JWT config is up to date!')
 }
 
-async function main(): Promise<void> {
+async function main() {
 	await updateServer(true)
 	await updateDB(true)
 	await updateJWT(true)

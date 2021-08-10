@@ -1,7 +1,7 @@
 import { Collection, Entity, ManyToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { Student } from './Student'
-import { Teacher } from './Teacher'
 import { Task } from './Task'
+import { Teacher } from './Teacher'
 
 @Entity()
 export class User {

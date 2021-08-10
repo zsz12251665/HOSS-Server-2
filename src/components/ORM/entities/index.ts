@@ -1,15 +1,15 @@
-import { User } from './User'
-import { Student } from './Student'
-import { Teacher } from './Teacher'
 import { Course } from './Course'
-import { Task } from './Task'
 import { Homework } from './Homework'
+import { Student } from './Student'
+import { Task } from './Task'
+import { Teacher } from './Teacher'
+import { User } from './User'
 
-export * from './User'
-export * from './Student'
-export * from './Teacher'
 export * from './Course'
-export * from './Task'
 export * from './Homework'
+export * from './Student'
+export * from './Task'
+export * from './Teacher'
+export * from './User'
 
-export default [User, Student, Teacher, Course, Task, Homework]
+export default [Course, Homework, Student, Task, Teacher, User]
