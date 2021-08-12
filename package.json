@@ -47,7 +47,6 @@
 	"_moduleAliases": {
 		"@": "./src/components",
 		"@config": "./config",
-		"@models": "./src/models",
-		"@src": "./src"
+		"@models": "./src/models"
 	}
 }
