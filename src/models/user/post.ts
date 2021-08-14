@@ -4,7 +4,7 @@ import { User } from '@/ORM'
 import { EntityManager } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-export async function loginMiddleware(ctx: Context) {
+export async function login(ctx: Context) {
 	const { username, password, tokenType } = ctx.request.body
 	if (!username || !password)
 		ctx.throw(400, 'The username and password should not be empty!')
@@ -22,7 +22,7 @@ export async function loginMiddleware(ctx: Context) {
 		ctx.throw(403, 'The username or password is incorrect!')
 }
 
-export async function registerMiddleware(ctx: Context) {
+export async function register(ctx: Context) {
 	const { username, password } = ctx.request.body
 	if (!username || !password)
 		ctx.throw(400, 'The username and password should not be empty!')

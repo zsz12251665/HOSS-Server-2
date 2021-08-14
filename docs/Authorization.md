@@ -2,10 +2,10 @@
 
 ## User
 
-| URI                |             GET             |             PUT             |            PATCH            |           DELETE            |
-| ------------------ | :-------------------------: | :-------------------------: | :-------------------------: | :-------------------------: |
-| `/users`           |        Administrator        |        Administrator        |        Administrator        |        Administrator        |
-| `/users/:username` | Administrator<br />The User | Administrator<br />The User | Administrator<br />The User | Administrator<br />The User |
+| URI                |             GET             |      PUT      |                              PATCH                              |           DELETE            |
+| ------------------ | :-------------------------: | :-----------: | :-------------------------------------------------------------: | :-------------------------: |
+| `/users`           |        Administrator        | Administrator |                          Administrator                          |        Administrator        |
+| `/users/:username` | Administrator<br />The User | Administrator | Administrator<br />The User (`identity` and `certificate` only) | Administrator<br />The User |
 
 | URI                      |  POST  |
 | ------------------------ | :----: |

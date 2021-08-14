@@ -48,8 +48,7 @@
     "baseUrl": "./",                             /* Base directory to resolve non-absolute module names. */
     "paths": {
 			"@/*": ["src/components/*"],
-			"@config/*": ["config/*"],
-      "@models/*": ["src/models/*"]
+			"@config/*": ["config/*"]
     },                                 /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     "resolveJsonModule": true,                   /* Allows importing modules with a '.json' extension, which is a common practice in node projects. */
     // "rootDirs": [],                              /* List of root folders whose combined content represents the structure of the project at runtime. */
