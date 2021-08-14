@@ -10,7 +10,7 @@ export class Teacher {
 	@Property()
 	name!: string
 
-	@OneToOne()
+	@OneToOne(() => User, 'teacher')
 	user?: User
 
 	@ManyToMany(() => Course, 'teachers')

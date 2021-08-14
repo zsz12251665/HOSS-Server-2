@@ -14,12 +14,12 @@ export class User {
 	@Property()
 	isAdministrator: boolean = false
 
-	@OneToOne(() => Student, 'user')
+	@OneToOne()
 	student?: Student
 
-	@OneToOne(() => Teacher, 'user')
+	@OneToOne()
 	teacher?: Teacher
 
-	@ManyToMany(() => Task, 'monitors')
-	managedTasks = new Collection<Task>(this)
+	@ManyToMany()
+	tasks = new Collection<Task>(this)
 }

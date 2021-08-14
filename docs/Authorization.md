@@ -2,10 +2,12 @@
 
 ## User
 
-| URI                |             GET             |      PUT      |                              PATCH                              |           DELETE            |
-| ------------------ | :-------------------------: | :-----------: | :-------------------------------------------------------------: | :-------------------------: |
-| `/users`           |        Administrator        | Administrator |                          Administrator                          |        Administrator        |
-| `/users/:username` | Administrator<br />The User | Administrator | Administrator<br />The User (`identity` and `certificate` only) | Administrator<br />The User |
+| URI                       |             GET             |      PUT      |                              PATCH                              |           DELETE            |
+| ------------------------- | :-------------------------: | :-----------: | :-------------------------------------------------------------: | :-------------------------: |
+| `/users`                  |        Administrator        | Administrator |                          Administrator                          |        Administrator        |
+| `/users/:username`        | Administrator<br />The User | Administrator | Administrator<br />The User (`identity` and `certificate` only) | Administrator<br />The User |
+| `/students/:number/tasks` |          The User           |  **Nobody**   |                           **Nobody**                            |             :x:             |
+
 
 | URI                      |  POST  |
 | ------------------------ | :----: |
@@ -19,7 +21,6 @@
 | `/students`                                |                      Administrator                      | Administrator |             Administrator              | Administrator |
 | `/students/:number`                        |             Administrator<br />The Student              | Administrator |             Administrator              | Administrator |
 | `/students/:number/courses`                |             Administrator<br />The Student              | Administrator |             Administrator              |      :x:      |
-| `/students/:number/supervisees`            |                       The Student                       |  **Nobody**   |               **Nobody**               |      :x:      |
 | `/students/:number/homeworks`              |                       The Student                       |      :x:      |               **Nobody**               |      :x:      |
 | `/students/:number/homeworks/:taskID`      | The Student<br />Related Teachers<br />Related Monitors |      :x:      | Related Teachers<br />Related Monitors |      :x:      |
 | `/students/:number/homeworks/:taskID/file` |            The Student<br />Related Teachers            |  The Student  |                  :x:                   |      :x:      |

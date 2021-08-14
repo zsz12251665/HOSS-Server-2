@@ -10,12 +10,13 @@ There could be aliases for some less common HTTP methods which might be unsuppor
 
 ## User
 
-| URI                      | Resource                               | Methods                 |
-| ------------------------ | -------------------------------------- | ----------------------- |
-| `/users`                 | Some users (see [batching](#batching)) | GET, PUT, PATCH, DELETE |
-| `/users`                 | A new user                             | POST                    |
-| `/users/:username`       | The user                               | GET, PUT, PATCH, DELETE |
-| `/users/:username/token` | A token of the user                    | POST                    |
+| URI                      | Resource                                                | Methods                 |
+| ------------------------ | ------------------------------------------------------- | ----------------------- |
+| `/users`                 | Some users (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
+| `/users`                 | A new user                                              | POST                    |
+| `/users/:username`       | The user                                                | GET, PUT, PATCH, DELETE |
+| `/users/:username/tasks` | The set of primary keys of tasks which the user manages | GET, PUT, PATCH         |
+| `/users/:username/token` | A token of the user                                     | POST                    |
 
 There could be aliases for practical requests:
 
@@ -29,7 +30,6 @@ There could be aliases for practical requests:
 | `/students`                                | Some students (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
 | `/students/:number`                        | The student                                                | GET, PUT, PATCH, DELETE |
 | `/students/:number/courses`                | The set of primary keys of courses which the student takes | GET, PUT, PATCH         |
-| `/students/:number/supervisees`            | The set of primary keys of tasks which the student manages | GET, PUT, PATCH         |
 | `/students/:number/homeworks`              | The list of homeworks which the student needs to write     | GET, PATCH              |
 | `/students/:number/homeworks/:taskID`      | The homework of the task for the student                   | GET, PATCH              |
 | `/students/:number/homeworks/:taskID/file` | The homework file of the task for the student              | GET, PUT                |
@@ -54,15 +54,15 @@ There could be aliases for practical requests:
 
 ## Task
 
-| URI                                     | Resource                                                | Methods                 |
-| --------------------------------------- | ------------------------------------------------------- | ----------------------- |
-| `/tasks`                                | Some tasks (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
-| `/tasks/:taskID`                        | The task                                                | GET, PUT, PATCH, DELETE |
-| `/tasks/:taskID/files`                  | The package of all homework files of the task           | GET                     |
-| `/tasks/:taskID/homeworks`              | The list of all homeworks of the task                   | GET, PATCH              |
-| `/tasks/:taskID/homeworks/:number`      | The homework of the task for the student                | GET, PATCH              |
-| `/tasks/:taskID/homeworks/:number/file` | The homework file of the task for the student           | GET, PUT                |
-| `/tasks/:taskID/monitors`               | The set of primary keys of students who manage the task | GET, PUT, PATCH         |
+| URI                                     | Resource                                             | Methods                 |
+| --------------------------------------- | ---------------------------------------------------- | ----------------------- |
+| `/tasks`                                | Some tasks (see [batching](#batching))               | GET, PUT, PATCH, DELETE |
+| `/tasks/:taskID`                        | The task                                             | GET, PUT, PATCH, DELETE |
+| `/tasks/:taskID/files`                  | The package of all homework files of the task        | GET                     |
+| `/tasks/:taskID/homeworks`              | The list of all homeworks of the task                | GET, PATCH              |
+| `/tasks/:taskID/homeworks/:number`      | The homework of the task for the student             | GET, PATCH              |
+| `/tasks/:taskID/homeworks/:number/file` | The homework file of the task for the student        | GET, PUT                |
+| `/tasks/:taskID/monitors`               | The set of primary keys of users who manage the task | GET, PUT, PATCH         |
 
 P. S. `/tasks/:taskID/homeworks/:number` and `/students/:number/homeworks/:taskID` are identical. Both of them indicates the homework of the task for the student. So do `/tasks/:taskID/homeworks/:number/file` and `/students/:number/homeworks/:taskID/file`.
 

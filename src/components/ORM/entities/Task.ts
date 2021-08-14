@@ -26,6 +26,6 @@ export class Task {
 	@OneToMany(() => Homework, 'task')
 	homeworks = new Collection<Homework>(this)
 
-	@ManyToMany()
+	@ManyToMany(() => User, 'tasks')
 	monitors = new Collection<User>(this)
 }

@@ -14,7 +14,7 @@ export class Student {
 	@Property()
 	class?: string
 
-	@OneToOne()
+	@OneToOne(() => User, 'student')
 	user?: User
 
 	@ManyToMany(() => Course, 'students')
