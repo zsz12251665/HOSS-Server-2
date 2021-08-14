@@ -2,6 +2,7 @@ import { User } from '@/ORM'
 import { EntityManager } from '@mikro-orm/core'
 import { Context } from 'koa'
 
+/** 单个 DELETE 请求 */
 export async function deleteSingle(ctx: Context) {
 	const em: EntityManager = ctx.em
 	const user = await em.findOne(User, ctx.params.username)
@@ -13,6 +14,7 @@ export async function deleteSingle(ctx: Context) {
 	}
 }
 
+/** 批量 DELETE 请求 */
 export async function deleteMultiple(ctx: Context) {
 	const em: EntityManager = ctx.em
 	const body = ctx.request.body

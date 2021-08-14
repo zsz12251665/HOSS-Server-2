@@ -4,6 +4,7 @@ import { User } from '@/ORM'
 import { EntityManager } from '@mikro-orm/core'
 import { Context } from 'koa'
 
+/** 登录请求 */
 export async function login(ctx: Context) {
 	const { username, password, tokenType } = ctx.request.body
 	if (!username || !password)
@@ -22,6 +23,7 @@ export async function login(ctx: Context) {
 		ctx.throw(403, 'The username or password is incorrect!')
 }
 
+/** 注册请求 */
 export async function register(ctx: Context) {
 	const { username, password } = ctx.request.body
 	if (!username || !password)

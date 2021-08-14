@@ -9,6 +9,7 @@ const userMapper = (user: User) => ({
 	teacherID: user.teacher?.id ?? null
 })
 
+/** 单个 GET 请求 */
 export async function getSingle(ctx: Context) {
 	const em: EntityManager = ctx.em
 	const user = await em.findOne(User, ctx.params.username)
@@ -18,6 +19,7 @@ export async function getSingle(ctx: Context) {
 		ctx.body = userMapper(user)
 }
 
+/** 批量 GET 请求 */
 export async function getMultiple(ctx: Context) {
 	const em: EntityManager = ctx.em
 	const users = await em.find(User, {})
