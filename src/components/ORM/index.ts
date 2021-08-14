@@ -8,9 +8,7 @@ import entities from './entities'
  * @returns {Promise<MikroORM>} 异步返回一个 ORM 实例
  */
 async function init(config?: ConnectionOptions): Promise<MikroORM> {
-	if (config === undefined)
-		config = await import('@config/db.json')
-	return MikroORM.init(Object.assign({ entities, metadataProvider: TsMorphMetadataProvider }, config))
+	return MikroORM.init(Object.assign({ entities, metadataProvider: TsMorphMetadataProvider }, config ?? await import('@config/orm.json')))
 }
 
 export * from './entities'

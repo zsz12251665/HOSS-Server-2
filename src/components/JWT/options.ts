@@ -1,6 +1,9 @@
-const options = new Map<string, object>()
+import { SignOptions } from "jsonwebtoken"
 
-options.set('default', { algorithm: 'HS256', expiresIn: '15min' })
-options.set('userToken', { algorithm: 'HS256', expiresIn: '2h' })
+const options = new Map<string, SignOptions>([
+	['default', { algorithm: 'HS256', expiresIn: '15min' }],
+	['userToken', { algorithm: 'HS256', expiresIn: '2h' }],
+	['refreshToken', { algorithm: 'HS256', expiresIn: '7d' }]
+])
 
 export default options

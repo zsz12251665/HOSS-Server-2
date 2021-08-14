@@ -23,14 +23,14 @@ async function updateServer(isInitializing: boolean = false) {
 	console.log('Server config is up to date!')
 }
 
-/** MikroORM 配置 */
-async function updateDB(isInitializing: boolean = false) {
-	const configPath = 'config/db.json'
+/** ORM 配置 */
+async function updateORM(isInitializing: boolean = false) {
+	const configPath = 'config/orm.json'
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	if (isInitializing && defaultConfig.dbName)
 		return
 	for (; ;) {
-		console.log('----- DB Config -----')
+		console.log('----- ORM Config -----')
 		const config = await ask([
 			{
 				name: 'type',
@@ -75,12 +75,12 @@ async function updateDB(isInitializing: boolean = false) {
 			}
 		])
 		if ((await ORM(config)).isConnected()) {
-			console.log('Connect to the data server successfully!')
+			console.log('Connect to the database successfully!')
 			writeFileSync(configPath, JSON.stringify(config, null, '\t'))
-			console.log('DB config is up to date!')
+			console.log('ORM config is up to date!')
 			break
 		} else
-			console.error('Fail to connect to the data server!')
+			console.error('Fail to connect to the database!')
 	}
 	const orm = await ORM()
 	const migrator = orm.getMigrator()
@@ -148,7 +148,7 @@ async function updateJWT(isInitializing: boolean = false) {
 
 async function main() {
 	await updateServer(true)
-	await updateDB(true)
+	await updateORM(true)
 	await updateJWT(true)
 	for (; ;) {
 		const { action } = await ask([{
@@ -163,7 +163,7 @@ async function main() {
 				await updateServer()
 				break
 			case 'DB':
-				await updateDB()
+				await updateORM()
 				break
 			case 'JWT':
 				await updateJWT()

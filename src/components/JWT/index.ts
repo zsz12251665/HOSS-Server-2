@@ -5,12 +5,11 @@ import options from './options'
 /**
  * 使用给定配置签发令牌
  * @param {object} content 要签发的令牌内容
- * @param {string} option 要签发的令牌配置名
+ * @param {string} optionName 要签发的令牌配置名
  * @returns {string} 签发的令牌内容
  */
-export function encode(content: object, option: string = 'default'): string {
-	const signOption = Object.assign({ issuer: config.issuer }, options.get(options.has(option) ? option : 'default'))
-	return sign(content, config.secret, signOption)
+export function encode(content: object, optionName: string = 'default'): string {
+	return sign(content, config.secret, Object.assign({ issuer: config.issuer }, options.get(options.has(optionName) ? optionName : 'default')))
 }
 
 /**
