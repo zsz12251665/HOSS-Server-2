@@ -1,27 +1,20 @@
-import { User } from '@/ORM'
-import { EntityManager } from '@mikro-orm/core'
+import ORM, { User } from '@/ORM'
+import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
-
-const userMapper = (user: User) => ({
-	username: user.identification,
-	isAdministrator: user.isAdministrator,
-	studentNumber: user.student?.number ?? null,
-	teacherID: user.teacher?.id ?? null
-})
 
 /** 单个 GET 请求 */
 export async function getSingle(ctx: Context) {
-	const em: EntityManager = ctx.em
-	const user = await em.findOne(User, ctx.params.username)
+	const repo = ORM.em.getRepository(User)
+	const user = await repo.findOne(ctx.params.username)
 	if (user === null)
 		ctx.throw(404)
 	else
-		ctx.body = userMapper(user)
+		ctx.body = wrap(user).toObject()
 }
 
 /** 批量 GET 请求 */
 export async function getMultiple(ctx: Context) {
-	const em: EntityManager = ctx.em
-	const users = await em.find(User, {})
-	ctx.body = users.map(userMapper)
+	const repo = ORM.em.getRepository(User)
+	const users = await repo.findAll()
+	ctx.body = users.map((user) => wrap(user).toObject())
 }

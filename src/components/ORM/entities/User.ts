@@ -7,21 +7,21 @@ import { Teacher } from './Teacher'
 export class User {
 	[PrimaryKeyType]: string
 
-	@PrimaryKey()
+	@PrimaryKey({ serializedName: 'username' })
 	identification!: string
 
-	@Property()
+	@Property({ hidden: true })
 	certificate!: string
 
 	@Property()
 	isAdministrator: boolean = false
 
-	@OneToOne()
+	@OneToOne({ serializedName: 'studentNumber' })
 	student?: Student
 
-	@OneToOne()
+	@OneToOne({ serializedName: 'teacherID' })
 	teacher?: Teacher
 
-	@ManyToMany()
+	@ManyToMany({ hidden: true })
 	tasks = new Collection<Task>(this)
 }

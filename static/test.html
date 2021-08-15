@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<title>Test - HOSS Server 2</title>
+		<style>
+body {
+	text-align: center;
+}
+.flex {
+	display: flex;
+}
+.grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+.grid > * {
+	padding: 10px;
+}
+.max-width {
+	width: 100%;
+}
+		</style>
+	</head>
+	<body>
+		<h1>HOSS Server 2</h1>
+		<div class="flex">
+			<select name="method" id="method">
+				<option value="GET">GET</option>
+				<option value="POST">POST</option>
+				<option value="PUT">PUT</option>
+				<option value="PATCH">PATCH</option>
+				<option value="DELETE">DELETE</option>
+			</select>
+			<input id="url" type="text" name="url" placeholder="URL" style="flex-grow: 1;" />
+		</div>
+		<div class="grid">
+			<textarea name="req_head" rows="25" id="req_head" class="max-width" placeholder="Request Header">{ "content-type": "application/json" }</textarea>
+			<textarea name="res" id="res" class="max-width" placeholder="Response" style="grid-column: 2; grid-row: 1 / 3;"></textarea>
+			<textarea name="req_body" rows="25" id="req_body" class="max-width" placeholder="Request Body">{}</textarea>
+			<button id="req_beautify">JSON Beautify</button>
+			<button id="res_beautify">JSON Beautify</button>
+			<button id="submit" style="grid-column: 1 / 3;">Submit</button>
+		</div>
+		<script>
+const method = document.querySelector('#method')
+const url = document.querySelector('#url')
+const req_head = document.querySelector('#req_head')
+const req_body = document.querySelector('#req_body')
+const res = document.querySelector('#res')
+document.querySelector('#req_beautify').onclick = () => [req_head.value, req_body.value] = [JSON.stringify(eval(`(${req_head.value})`), '\n', '\t'), JSON.stringify(eval(`(${req_body.value})`), '\n', '\t')]
+document.querySelector('#res_beautify').onclick = () => res.value = JSON.stringify(JSON.parse(res.value), '\n', '\t')
+document.querySelector('#submit').onclick = async () => res.value = await (await fetch(url.value, { method: method.value, headers: eval(`(${req_head.value})`), body: JSON.stringify(eval(`(${req_body.value})`)) })).text()
+		</script>
+	</body>
+</html>

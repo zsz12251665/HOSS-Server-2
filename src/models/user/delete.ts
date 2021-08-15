@@ -1,31 +1,24 @@
-import { User } from '@/ORM'
-import { EntityManager } from '@mikro-orm/core'
+import ORM, { User } from '@/ORM'
 import { Context } from 'koa'
 
 /** 单个 DELETE 请求 */
 export async function deleteSingle(ctx: Context) {
-	const em: EntityManager = ctx.em
-	const user = await em.findOne(User, ctx.params.username)
+	const repo = ORM.em.getRepository(User)
+	const user = await repo.findOne(ctx.params.username)
 	if (user === null)
 		ctx.throw(404)
 	else {
-		await em.removeAndFlush(user)
+		await repo.removeAndFlush(user)
 		ctx.body = null
 	}
 }
 
 /** 批量 DELETE 请求 */
 export async function deleteMultiple(ctx: Context) {
-	const em: EntityManager = ctx.em
-	const body = ctx.request.body
-	let users: User[]
-	if (Array.isArray(body))
-		users = (await Promise.all(body.map((username) => em.findOne(User, username)))).filter((user) => user !== null)
-	else
-		users = await em.find(User, body)
-	await em.removeAndFlush(users)
+	const repo = ORM.em.getRepository(User)
+	const users = await repo.find(ctx.request.body)
 	if (users.length === 0)
-		ctx.throw(404, 'No user is deleted!')
-	else
-		ctx.body = users.map((user: User) => user.identification)
+		ctx.throw(404, 'No user is found!')
+	await repo.removeAndFlush(users)
+	ctx.body = users.map((user) => user.identification)
 }
