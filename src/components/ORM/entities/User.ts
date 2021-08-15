@@ -1,10 +1,12 @@
-import { Collection, Entity, ManyToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { Collection, Entity, ManyToMany, OneToOne, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
 import { Student } from './Student'
 import { Task } from './Task'
 import { Teacher } from './Teacher'
 
 @Entity()
 export class User {
+	[PrimaryKeyType]: string
+
 	@PrimaryKey()
 	identification!: string
 
