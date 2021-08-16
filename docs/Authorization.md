@@ -2,11 +2,11 @@
 
 ## User
 
-| URI                       |             GET             |      PUT      |                              PATCH                              |           DELETE            |
-| ------------------------- | :-------------------------: | :-----------: | :-------------------------------------------------------------: | :-------------------------: |
-| `/users`                  |        Administrator        | Administrator |                          Administrator                          |        Administrator        |
-| `/users/:username`        | Administrator<br />The User | Administrator | Administrator<br />The User (`identity` and `certificate` only) | Administrator<br />The User |
-| `/students/:number/tasks` |          The User           |  **Nobody**   |                           **Nobody**                            |             :x:             |
+| URI                      |             GET             |      PUT      |                              PATCH                              |           DELETE            |
+| ------------------------ | :-------------------------: | :-----------: | :-------------------------------------------------------------: | :-------------------------: |
+| `/users`                 |        Administrator        | Administrator |                          Administrator                          |        Administrator        |
+| `/users/:username`       | Administrator<br />The User | Administrator | Administrator<br />The User (`identity` and `certificate` only) | Administrator<br />The User |
+| `/users/:username/tasks` |          The User           |  **Nobody**   |                           **Nobody**                            |             :x:             |
 
 
 | URI                      |  POST  |
