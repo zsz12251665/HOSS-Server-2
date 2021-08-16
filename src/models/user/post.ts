@@ -1,14 +1,19 @@
 import hash from '@/hash'
 import { encode } from '@/JWT'
 import ORM, { User } from '@/ORM'
+import { Rules, validate } from '@/parameter'
 import { Context } from 'koa'
 
 /** 登录请求 */
 export async function login(ctx: Context) {
+	const rules: Rules = {
+		username: 'string',
+		password: 'password',
+		tokenType: 'string?'
+	}
+	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const { username, password, tokenType } = ctx.request.body
-	if (!username || !password)
-		ctx.throw(400, 'The username and password should not be empty!')
-	if (ctx.params.username && ctx.params.username !== username)
+	if (ctx.params.username !== undefined && ctx.params.username !== username)
 		ctx.throw(400, 'The username does not match!')
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(username)
@@ -21,9 +26,12 @@ export async function login(ctx: Context) {
 
 /** 注册请求 */
 export async function register(ctx: Context) {
+	const rules: Rules = {
+		username: 'string',
+		password: 'password'
+	}
+	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const { username, password } = ctx.request.body
-	if (!username || !password)
-		ctx.throw(400, 'The username and password should not be empty!')
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(username)
 	if (user !== null)
