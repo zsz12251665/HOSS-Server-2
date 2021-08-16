@@ -5,6 +5,7 @@ import { deleteMultiple, deleteSingle } from './delete'
 import { getMultiple, getSingle } from './get'
 import { patchMultiple, patchSingle } from './patch'
 import { login, register } from './post'
+import { putMultiple, putSingle } from './put'
 
 const userRouter = new Router({ prefix: '/users' })
 
@@ -21,7 +22,10 @@ userRouter.delete('/:username', deleteSingle)
 
 userRouter.use(administratorOnlyFilter)
 
+userRouter.put('/:username', putSingle)
+
 userRouter.get('/', getMultiple)
+userRouter.put('/', putMultiple)
 userRouter.patch('/', patchMultiple)
 userRouter.delete('/', deleteMultiple)
 
