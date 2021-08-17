@@ -26,4 +26,6 @@ userRouter.put('/:username', authFilter.administratorOnly, putHandler.single)
 userRouter.patch('/:username', patchHandler.single)
 userRouter.delete('/:username', deleteHandler.single)
 
+userRouter.get('/:username/tasks', authFilter.selfOnly, getHandler.tasks)
+
 export default userRouter
