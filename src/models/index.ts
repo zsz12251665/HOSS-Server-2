@@ -3,10 +3,13 @@ import courseRouter from './course'
 import studentRouter from './student'
 import taskRouter from './task'
 import teacherRouter from './teacher'
+import tokenMiddleware from './token'
 import userRouter from './user'
 import { login, register } from './user/post'
 
 const router = new Router()
+
+router.use(tokenMiddleware)
 
 router.use(userRouter.routes())
 router.use(studentRouter.routes())

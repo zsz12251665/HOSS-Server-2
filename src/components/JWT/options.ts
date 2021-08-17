@@ -1,4 +1,4 @@
-import { SignOptions } from "jsonwebtoken"
+import { SignOptions } from 'jsonwebtoken'
 
 const options = new Map<string, SignOptions>([
 	['default', { algorithm: 'HS256', expiresIn: '15min' }],

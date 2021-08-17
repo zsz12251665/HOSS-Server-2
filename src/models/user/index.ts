@@ -1,5 +1,4 @@
 import Router from '@koa/router'
-import tokenMiddleware from '../token'
 import * as authFilter from './auth'
 import * as deleteHandler from './delete'
 import * as getHandler from './get'
@@ -11,8 +10,6 @@ const userRouter = new Router({ prefix: '/users' })
 
 userRouter.post('/', postHandler.register)
 userRouter.post('/:username/token', postHandler.login)
-
-userRouter.use(tokenMiddleware)
 
 userRouter.all('/', authFilter.administratorOnly)
 userRouter.get('/', getHandler.batch)

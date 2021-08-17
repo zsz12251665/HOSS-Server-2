@@ -1,33 +1,22 @@
-import { Context, Middleware, Next } from 'koa'
+import ORM, { User } from '@/ORM'
+import { filterMiddleware, matchFunction } from '../filter'
 
-type matchFunction = (ctx: Context) => boolean
-
-/**
- * 过滤器中间件生成器
- * @param {matchFunction} filter 过滤函数
- * @param {string} failedMessage 被过滤时的错误信息
- * @returns {Middleware} 过滤器中间件
- */
-function filterGenerator(filter: matchFunction, failedMessage?: string): Middleware {
-	return async function (ctx: Context, next: Next) {
-		if (filter(ctx))
-			await next()
-		else
-			if (failedMessage === undefined)
-				ctx.throw(403)
-			else
-				ctx.throw(403, failedMessage)
+const administratorChecker: matchFunction = async (ctx) => {
+	if (ctx.state.authorization.isAdministrator === undefined) {
+		const repo = ORM.em.getRepository(User)
+		const user = await repo.findOne(ctx.state.authorization.username)
+		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
+	return ctx.state.authorization.isAdministrator
 }
 
-const administratorChecker: matchFunction = (ctx) => ctx.state.authorization.isAdministrator
-const selfChecker: matchFunction = (ctx) => ctx.state.authorization.username === ctx.params.username
+const selfChecker: matchFunction = async (ctx) => ctx.state.authorization.username === ctx.params.username
 
-/** 过滤器：仅管理员可操作 */
-export const administratorOnly = filterGenerator(administratorChecker)
+/** 过滤器：仅管理员 */
+export const administratorOnly = filterMiddleware(administratorChecker)
 
-/** 过滤器：仅资源用户自身可操作 */
-export const selfOnly = filterGenerator(selfChecker)
+/** 过滤器：仅资源用户自身 */
+export const selfOnly = filterMiddleware(selfChecker)
 
-/** 过滤器：资源用户自身和管理员可操作 */
-export const selfOrAdministrator = filterGenerator((ctx) => administratorChecker(ctx) || selfChecker(ctx))
+/** 过滤器：资源用户自身和管理员 */
+export const selfOrAdministrator = filterMiddleware(async (ctx) => await selfChecker(ctx) || await administratorChecker(ctx))

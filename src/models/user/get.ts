@@ -20,9 +20,12 @@ export async function batch(ctx: Context) {
 	ctx.body = users.map((user) => wrap(user).toObject())
 }
 
-/** 获取用户管理的 Task 列表 */
+/** 获取用户管理的任务列表 */
 export async function tasks(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.username, ['tasks'])
-	ctx.body = wrap(user).toObject().tasks
+	if (user === null)
+		ctx.throw(404)
+	else
+		ctx.body = user.tasks.getIdentifiers()
 }

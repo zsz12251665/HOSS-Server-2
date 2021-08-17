@@ -22,12 +22,17 @@ interface IUser {
 
 function unserialize(body: any, isAdministrator: boolean = true): IUser {
 	const user: IUser = {}
-	user.identification = body.username
-	user.certificate = body.password ? hash(body.password) : undefined
+	if (body.username !== undefined)
+		user.identification = body.username
+	if (body.password !== undefined)
+		user.certificate = hash(body.password)
 	if (isAdministrator) {
-		user.isAdministrator = body.isAdministrator
-		user.student = body.studentNumber
-		user.teacher = body.teacherID
+		if (body.isAdministrator !== undefined)
+			user.isAdministrator = body.isAdministrator
+		if (body.studentNumber !== undefined)
+			user.student = body.studentNumber
+		if (body.teacherID !== undefined)
+			user.teacher = body.teacherID
 	}
 	return user
 }

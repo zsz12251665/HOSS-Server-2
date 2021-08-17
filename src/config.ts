@@ -74,7 +74,8 @@ async function updateORM(isInitializing: boolean = false) {
 				validate: (input) => input ? true : 'Database should not be empty!',
 			}
 		])
-		if ((await ORM(config)).isConnected()) {
+		await ORM.init(config)
+		if (ORM.orm.isConnected()) {
 			console.log('Connect to the database successfully!')
 			writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 			console.log('ORM config is up to date!')
@@ -82,8 +83,8 @@ async function updateORM(isInitializing: boolean = false) {
 		} else
 			console.error('Fail to connect to the database!')
 	}
-	const orm = await ORM()
-	const migrator = orm.getMigrator()
+	await ORM.init()
+	const migrator = ORM.orm.getMigrator()
 	const initialized = (await migrator.getExecutedMigrations()).length + (await migrator.getPendingMigrations()).length
 	if (!initialized) {
 		console.log('Creating initial migration...')
@@ -106,7 +107,7 @@ async function updateORM(isInitializing: boolean = false) {
 				filter: (input) => hash(input)
 			}
 		])
-		await orm.em.persistAndFlush(orm.em.create(User, Object.assign(administrator, { isAdministrator: true })))
+		await ORM.em.persistAndFlush(ORM.em.create(User, Object.assign(administrator, { isAdministrator: true })))
 	} else {
 		const { updateSchema } = await ask([{
 			name: 'updateSchema',

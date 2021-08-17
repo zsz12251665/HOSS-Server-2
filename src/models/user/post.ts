@@ -19,7 +19,7 @@ export async function login(ctx: Context) {
 	const user = await repo.findOne(username)
 	if (user !== null && user.certificate === hash(password)) {
 		ctx.status = 200
-		ctx.body = encode({ username, isAdministrator: user.isAdministrator, tokenType }, tokenType ?? 'userToken')
+		ctx.body = encode({ username, tokenType }, tokenType ?? 'userToken')
 	} else
 		ctx.throw(403, 'The username or password is incorrect!')
 }
