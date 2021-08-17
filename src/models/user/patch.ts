@@ -4,20 +4,20 @@ import { Rules, validate, validateDictionary } from '@/parameter'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-interface IUser {
-	identification?: string
-	certificate?: string
-	isAdministrator?: boolean
-	student?: string | null
-	teacher?: number | null
-}
-
 const rules: Rules = {
 	username: 'string?',
 	password: 'password?',
 	isAdministrator: 'boolean?',
 	studentNumber: 'string?',
 	teacherID: 'integer?'
+}
+
+interface IUser {
+	identification?: string
+	certificate?: string
+	isAdministrator?: boolean
+	student?: string | null
+	teacher?: number | null
 }
 
 function unserialize(body: any, isAdministrator: boolean = true): IUser {
@@ -32,8 +32,8 @@ function unserialize(body: any, isAdministrator: boolean = true): IUser {
 	return user
 }
 
-/** 单个 PATCH 请求 */
-export async function patchSingle(ctx: Context) {
+/** 单个用户 PATCH 请求 */
+export async function single(ctx: Context) {
 	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.username)
@@ -44,8 +44,8 @@ export async function patchSingle(ctx: Context) {
 	ctx.body = wrap(user).toObject()
 }
 
-/** 批量 PATCH 请求 */
-export async function patchMultiple(ctx: Context) {
+/** 用户批量 PATCH 请求 */
+export async function batch(ctx: Context) {
 	validateDictionary(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const body = ctx.request.body
 	const repo = ORM.em.getRepository(User)

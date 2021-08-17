@@ -1,32 +1,29 @@
 import Router from '@koa/router'
 import tokenMiddleware from '../token'
-import { administratorOnlyFilter, selfAndAdministratorFilter } from './auth'
-import { deleteMultiple, deleteSingle } from './delete'
-import { getMultiple, getSingle } from './get'
-import { patchMultiple, patchSingle } from './patch'
-import { login, register } from './post'
-import { putMultiple, putSingle } from './put'
+import * as authFilter from './auth'
+import * as deleteHandler from './delete'
+import * as getHandler from './get'
+import * as patchHandler from './patch'
+import * as postHandler from './post'
+import * as putHandler from './put'
 
 const userRouter = new Router({ prefix: '/users' })
 
-userRouter.post('/', register)
-userRouter.post('/:username/token', login)
+userRouter.post('/', postHandler.register)
+userRouter.post('/:username/token', postHandler.login)
 
 userRouter.use(tokenMiddleware)
 
-userRouter.use(selfAndAdministratorFilter)
+userRouter.all('/', authFilter.administratorOnly)
+userRouter.get('/', getHandler.batch)
+userRouter.put('/', putHandler.batch)
+userRouter.patch('/', patchHandler.batch)
+userRouter.delete('/', deleteHandler.batch)
 
-userRouter.get('/:username', getSingle)
-userRouter.patch('/:username', patchSingle)
-userRouter.delete('/:username', deleteSingle)
-
-userRouter.use(administratorOnlyFilter)
-
-userRouter.put('/:username', putSingle)
-
-userRouter.get('/', getMultiple)
-userRouter.put('/', putMultiple)
-userRouter.patch('/', patchMultiple)
-userRouter.delete('/', deleteMultiple)
+userRouter.all('/:username', authFilter.selfOrAdministrator)
+userRouter.get('/:username', getHandler.single)
+userRouter.put('/:username', authFilter.administratorOnly, putHandler.single)
+userRouter.patch('/:username', patchHandler.single)
+userRouter.delete('/:username', deleteHandler.single)
 
 export default userRouter

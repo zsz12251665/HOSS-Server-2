@@ -1,20 +1,18 @@
 import ORM, { User } from '@/ORM'
 import { Context } from 'koa'
 
-/** 单个 DELETE 请求 */
-export async function deleteSingle(ctx: Context) {
+/** 单个用户 DELETE 请求 */
+export async function single(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.username)
 	if (user === null)
 		ctx.throw(404)
-	else {
-		await repo.removeAndFlush(user)
-		ctx.body = null
-	}
+	await repo.removeAndFlush(user)
+	ctx.body = null
 }
 
-/** 批量 DELETE 请求 */
-export async function deleteMultiple(ctx: Context) {
+/** 用户批量 DELETE 请求 */
+export async function batch(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
 	const users = await repo.find(ctx.request.body)
 	if (users.length === 0)

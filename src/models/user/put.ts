@@ -4,14 +4,6 @@ import { Rules, validate, validateDictionary } from '@/parameter'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-interface IUser {
-	identification?: string
-	certificate?: string
-	isAdministrator?: boolean
-	student?: string | null
-	teacher?: number | null
-}
-
 const rules: Rules = {
 	username: 'string',
 	password: 'password',
@@ -20,18 +12,24 @@ const rules: Rules = {
 	teacherID: 'integer?'
 }
 
-function unserialize(body: any): IUser {
-	const user: IUser = {}
-	user.identification = body.username
-	user.certificate = hash(body.password)
-	user.isAdministrator = body.isAdministrator ?? false
-	user.student = body.studentNumber ?? null
-	user.teacher = body.teacherID ?? null
-	return user
+interface IUser {
+	identification: string
+	certificate: string
+	isAdministrator: boolean
+	student: string | null
+	teacher: number | null
 }
 
-/** 单个 PUT 请求 */
-export async function putSingle(ctx: Context) {
+const unserialize = (body: any): IUser => ({
+	identification: body.username,
+	certificate: hash(body.password),
+	isAdministrator: body.isAdministrator ?? false,
+	student: body.studentNumber ?? null,
+	teacher: body.teacherID ?? null
+})
+
+/** 单个用户 PUT 请求 */
+export async function single(ctx: Context) {
 	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const repo = ORM.em.getRepository(User)
 	let user = await repo.findOne(ctx.params.username)
@@ -44,8 +42,8 @@ export async function putSingle(ctx: Context) {
 	ctx.body = wrap(user).toObject()
 }
 
-/** 批量 PUT 请求 */
-export async function putMultiple(ctx: Context) {
+/** 用户批量 PUT 请求 */
+export async function batch(ctx: Context) {
 	validateDictionary(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
 	const body = ctx.request.body
 	const repo = ORM.em.getRepository(User)
