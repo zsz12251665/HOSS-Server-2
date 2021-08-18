@@ -12,9 +12,9 @@ export class Teacher {
 	@Property()
 	name!: string
 
-	@OneToOne(() => User, 'teacher')
+	@OneToOne(() => User, 'teacher', { serializedName: 'username' })
 	user?: User
 
-	@ManyToMany(() => Course, 'teachers')
+	@ManyToMany(() => Course, 'teachers', { hidden: true })
 	courses = new Collection<Course>(this)
 }
