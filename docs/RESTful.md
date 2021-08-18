@@ -12,7 +12,7 @@ There could be aliases for some less common HTTP methods which might be unsuppor
 
 | URI                      | Resource                                                | Methods                 |
 | ------------------------ | ------------------------------------------------------- | ----------------------- |
-| `/users`                 | Some users (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
+| `/users`                 | Some users (see [batching](#batching))                  | GET, PUT, PATCH         |
 | `/users`                 | A new user                                              | POST                    |
 | `/users/:username`       | The user                                                | GET, PUT, PATCH, DELETE |
 | `/users/:username/tasks` | The set of primary keys of tasks which the user manages | GET, PUT, PATCH         |
@@ -27,7 +27,7 @@ There could be aliases for practical requests:
 
 | URI                                        | Resource                                                   | Methods                 |
 | ------------------------------------------ | ---------------------------------------------------------- | ----------------------- |
-| `/students`                                | Some students (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
+| `/students`                                | Some students (see [batching](#batching))                  | GET, PUT, PATCH         |
 | `/students/:number`                        | The student                                                | GET, PUT, PATCH, DELETE |
 | `/students/:number/courses`                | The set of primary keys of courses which the student takes | GET, PUT, PATCH         |
 | `/students/:number/homeworks`              | The list of homeworks which the student needs to write     | GET, PATCH              |
@@ -38,7 +38,7 @@ There could be aliases for practical requests:
 
 | URI                            | Resource                                                     | Methods                 |
 | ------------------------------ | ------------------------------------------------------------ | ----------------------- |
-| `/teachers`                    | Some teachers (see [batching](#batching))                    | GET, PUT, PATCH, DELETE |
+| `/teachers`                    | Some teachers (see [batching](#batching))                    | GET, PUT, PATCH         |
 | `/teachers/:teacherID`         | The teacher                                                  | GET, PUT, PATCH, DELETE |
 | `/teachers/:teacherID/courses` | The set of primary keys of courses which the teacher teaches | GET, PUT, PATCH         |
 
@@ -46,7 +46,7 @@ There could be aliases for practical requests:
 
 | URI                           | Resource                                                  | Methods                 |
 | ----------------------------- | --------------------------------------------------------- | ----------------------- |
-| `/courses`                    | Some courses (see [batching](#batching))                  | GET, PUT, PATCH, DELETE |
+| `/courses`                    | Some courses (see [batching](#batching))                  | GET, PUT, PATCH         |
 | `/courses/:courseID`          | The course                                                | GET, PUT, PATCH, DELETE |
 | `/courses/:courseID/students` | The set of primary keys of students who take the course   | GET, PUT, PATCH         |
 | `/courses/:courseID/tasks`    | The set of primary keys of tasks which the course assigns | GET, PUT, PATCH         |
@@ -56,7 +56,7 @@ There could be aliases for practical requests:
 
 | URI                                     | Resource                                             | Methods                 |
 | --------------------------------------- | ---------------------------------------------------- | ----------------------- |
-| `/tasks`                                | Some tasks (see [batching](#batching))               | GET, PUT, PATCH, DELETE |
+| `/tasks`                                | Some tasks (see [batching](#batching))               | GET, PUT, PATCH         |
 | `/tasks/:taskID`                        | The task                                             | GET, PUT, PATCH, DELETE |
 | `/tasks/:taskID/files`                  | The package of all homework files of the task        | GET                     |
 | `/tasks/:taskID/homeworks`              | The list of all homeworks of the task                | GET, PATCH              |
@@ -84,5 +84,3 @@ For batching resources, the meaning of the methods are slightly different:
   - E. g. `PUT /students` rewrites or creates some students in the database
 - PATCH method updates **some** objects
   - E. g. `PATCH /teachers` partially rewrites some teachers in the database
-- DELETE method removes **some** objects
-  - E. g. `DELETE /courses` removes some courses from the database

@@ -15,7 +15,6 @@ userRouter.all('/', authFilter.administratorOnly)
 userRouter.get('/', getHandler.batch)
 userRouter.put('/', putHandler.batch)
 userRouter.patch('/', patchHandler.batch)
-userRouter.delete('/', deleteHandler.batch)
 
 userRouter.all('/:username', authFilter.selfOrAdministrator)
 userRouter.get('/:username', getHandler.single)
