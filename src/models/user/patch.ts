@@ -1,16 +1,18 @@
 import hash from '@/hash'
 import ORM, { User } from '@/ORM'
-import { Rules, validate, validateDictionary } from '@/parameter'
 import { wrap } from '@mikro-orm/core'
+import Joi from 'joi'
 import { Context } from 'koa'
 
-const rules: Rules = {
-	username: 'string?',
-	password: 'password?',
-	isAdministrator: 'boolean?',
-	studentNumber: 'string?',
-	teacherID: 'integer?'
-}
+const schema = Joi.object({
+	username: Joi.string().pattern(/\w+$/).optional(),
+	password: Joi.string().optional(),
+	isAdministrator: Joi.boolean().optional(),
+	studentNumber: Joi.string().pattern(/\w+$/).allow(null).optional(),
+	teacherID: Joi.number().integer().min(0).allow(null).optional()
+})
+
+const batchSchema = Joi.array().items(Joi.array().ordered(Joi.string(), schema))
 
 interface IUser {
 	identification?: string
@@ -39,25 +41,25 @@ function unserialize(body: any, isAdministrator: boolean = true): IUser {
 
 /** 单个用户 PATCH 请求 */
 export async function single(ctx: Context) {
-	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
+	const body = await schema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.username)
 	if (user === null)
 		ctx.throw(404)
-	wrap(user).assign(unserialize(ctx.request.body, ctx.state.authorization.isAdministrator))
+	wrap(user).assign(unserialize(body, ctx.state.authorization.isAdministrator))
 	await repo.flush()
 	ctx.body = wrap(user).toObject()
 }
 
 /** 用户批量 PATCH 请求 */
 export async function batch(ctx: Context) {
-	validateDictionary(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
-	const body = ctx.request.body
+	const body: [any, any][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
+	const bodyMap = new Map(body)
 	const repo = ORM.em.getRepository(User)
-	const users = await repo.find(Object.keys(body))
+	const users = await repo.find(body.map((entry) => entry[0]))
 	if (users.length === 0)
 		ctx.throw(404, 'No user is found!')
-	users.forEach((user) => wrap(user).assign(unserialize(body[user.identification])))
+	users.forEach((user) => wrap(user).assign(unserialize(bodyMap.get(user.identification))))
 	await repo.flush()
 	ctx.body = users.map((user) => wrap(user).toObject())
 }

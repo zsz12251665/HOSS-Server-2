@@ -1,5 +1,6 @@
 import Router from '@koa/router'
 import courseRouter from './course'
+import { joiValidationErrorHandler } from './error'
 import studentRouter from './student'
 import taskRouter from './task'
 import teacherRouter from './teacher'
@@ -10,6 +11,7 @@ import { login, register } from './user/post'
 const router = new Router()
 
 router.use(tokenMiddleware)
+router.use(joiValidationErrorHandler)
 
 router.use(userRouter.routes())
 router.use(studentRouter.routes())

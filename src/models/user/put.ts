@@ -1,16 +1,18 @@
 import hash from '@/hash'
 import ORM, { User } from '@/ORM'
-import { Rules, validate, validateDictionary } from '@/parameter'
 import { wrap } from '@mikro-orm/core'
+import Joi from 'joi'
 import { Context } from 'koa'
 
-const rules: Rules = {
-	username: 'string',
-	password: 'password',
-	isAdministrator: 'boolean?',
-	studentNumber: 'string?',
-	teacherID: 'integer?'
-}
+const schema = Joi.object({
+	username: Joi.string().pattern(/\w+$/).required(),
+	password: Joi.string().required(),
+	isAdministrator: Joi.boolean().default(false),
+	studentNumber: Joi.string().pattern(/\w+$/).allow(null).default(null),
+	teacherID: Joi.number().integer().min(0).allow(null).default(null)
+})
+
+const batchSchema = Joi.array().items(Joi.array().ordered(Joi.string(), schema))
 
 interface IUser {
 	identification: string
@@ -30,34 +32,33 @@ const unserialize = (body: any): IUser => ({
 
 /** 单个用户 PUT 请求 */
 export async function single(ctx: Context) {
-	validate(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
+	const body = await schema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
 	let user = await repo.findOne(ctx.params.username)
 	if (user === null) {
-		user = repo.create(unserialize(ctx.request.body))
+		user = repo.create(unserialize(body))
 		repo.persist(user)
 	} else
-		wrap(user).assign(unserialize(ctx.request.body))
+		wrap(user).assign(unserialize(body))
 	await repo.flush()
 	ctx.body = wrap(user).toObject()
 }
 
 /** 用户批量 PUT 请求 */
 export async function batch(ctx: Context) {
-	validateDictionary(rules, ctx.request.body, (errors) => ctx.throw(400, JSON.stringify(errors)))
-	const body = ctx.request.body
+	const body: [any, any][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
 	const repo = ORM.em.getRepository(User)
-	const users = await repo.find(Object.keys(body))
+	const users = await repo.find(body.map((entry) => entry[0]))
 	const usernames = users.map((user) => user.identification)
-	Object.keys(body).forEach((username) => {
+	body.forEach(([username, data]) => {
 		let user = users[usernames.indexOf(username)]
 		if (user === undefined) {
-			user = repo.create(unserialize(body[username]))
+			user = repo.create(unserialize(data))
 			repo.persist(user)
 			users.push(user)
 			usernames.push(username)
 		} else
-			wrap(user).assign(unserialize(body[username]))
+			wrap(user).assign(unserialize(data))
 	})
 	await repo.flush()
 	ctx.body = users.map((user) => wrap(user).toObject())
