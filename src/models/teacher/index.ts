@@ -2,23 +2,24 @@ import Router from '@koa/router'
 import * as authFilter from './auth'
 import * as deleteHandler from './delete'
 import * as getHandler from './get'
+import * as patchHandler from './patch'
+import * as putHandler from './put'
 
 const teacherRouter = new Router({ prefix: '/teachers' })
 
 teacherRouter.all('/', authFilter.administratorOnly)
 teacherRouter.get('/', getHandler.batch)
-teacherRouter.put('/', (ctx) => ctx.throw(501))
-teacherRouter.patch('/', (ctx) => ctx.throw(501))
+teacherRouter.put('/', putHandler.batch)
+teacherRouter.patch('/', patchHandler.batch)
 
 teacherRouter.get('/:teacherID', authFilter.teacherOrAdministrator, getHandler.single)
 teacherRouter.all('/:teacherID', authFilter.administratorOnly)
-teacherRouter.put('/:teacherID', (ctx) => ctx.throw(501))
-teacherRouter.patch('/:teacherID', (ctx) => ctx.throw(501))
+teacherRouter.put('/:teacherID', putHandler.single)
+teacherRouter.patch('/:teacherID', patchHandler.single)
 teacherRouter.delete('/:teacherID', deleteHandler.single)
 
 teacherRouter.get('/:teacherID/courses', authFilter.teacherOrAdministrator, getHandler.courses)
-teacherRouter.all('/:teacherID/courses', authFilter.administratorOnly)
-teacherRouter.put('/:teacherID/courses', (ctx) => ctx.throw(501))
-teacherRouter.patch('/:teacherID/courses', (ctx) => ctx.throw(501))
+teacherRouter.put('/:teacherID/courses', authFilter.administratorOnly, putHandler.courses)
+teacherRouter.patch('/:teacherID/courses', authFilter.administratorOnly, patchHandler.courses)
 
 export default teacherRouter
