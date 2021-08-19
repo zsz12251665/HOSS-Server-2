@@ -5,14 +5,17 @@ import { Context } from 'koa'
 
 const coursesSchema = Joi.array().items(Joi.number().integer().min(0))
 
+/** 单个教师 PUT 请求 */
 export async function single(ctx: Context) {
 	ctx.throw(501)
 }
 
+/** 教师批量 PUT 请求 */
 export async function batch(ctx: Context) {
 	ctx.throw(501)
 }
 
+/** 覆写教师的课程列表 */
 export async function courses(ctx: Context) {
 	const body = await coursesSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Teacher)

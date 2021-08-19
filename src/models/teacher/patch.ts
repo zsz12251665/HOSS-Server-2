@@ -7,14 +7,17 @@ const coursesSchema = Joi.object({
 	delete: Joi.array().items(Joi.number().integer().min(0)).optional()
 })
 
+/** 单个教师 PATCH 请求 */
 export async function single(ctx: Context) {
 	ctx.throw(501)
 }
 
+/** 教师批量 PATCH 请求 */
 export async function batch(ctx: Context) {
 	ctx.throw(501)
 }
 
+/** 修改教师的课程列表（增加/移除） */
 export async function courses(ctx: Context) {
 	const body = await coursesSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Teacher)

@@ -15,7 +15,7 @@ const registerSchema = Joi.object({
 	password: Joi.string().required()
 })
 
-/** 登录请求 */
+/** 用户登录请求 */
 export async function login(ctx: Context) {
 	const { username, password, tokenType } = await loginSchema.validateAsync(ctx.request.body)
 	if (ctx.params.username !== undefined && ctx.params.username !== username)
@@ -29,7 +29,7 @@ export async function login(ctx: Context) {
 		ctx.throw(403, 'The username or password is incorrect!')
 }
 
-/** 注册请求 */
+/** 注册用户请求 */
 export async function register(ctx: Context) {
 	const { username, password } = await registerSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
