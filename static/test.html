@@ -1,56 +1,82 @@
-<html>
-	<head>
-		<title>Test - HOSS Server 2</title>
-		<style>
-body {
-	text-align: center;
-}
-.flex {
-	display: flex;
-}
-.grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-}
-.grid > * {
-	padding: 10px;
-}
-.max-width {
-	width: 100%;
-}
-		</style>
-	</head>
-	<body>
-		<h1>HOSS Server 2</h1>
-		<div class="flex">
-			<select name="method" id="method">
-				<option value="GET">GET</option>
-				<option value="POST">POST</option>
-				<option value="PUT">PUT</option>
-				<option value="PATCH">PATCH</option>
-				<option value="DELETE">DELETE</option>
-			</select>
-			<input id="url" type="text" name="url" placeholder="URL" style="flex-grow: 1;" />
-		</div>
-		<div class="grid">
-			<h3>Request</h3>
-			<h3>Response</h3>
-			<textarea name="req_head" rows="25" id="req_head" class="max-width" placeholder="Request Header">{ "content-type": "application/json" }</textarea>
-			<textarea name="res" id="res" class="max-width" placeholder="Response" style="grid-row: span 2;"></textarea>
-			<textarea name="req_body" rows="25" id="req_body" class="max-width" placeholder="Request Body">{}</textarea>
-			<button id="req_beautify">Request JSON Beautify</button>
-			<button id="res_beautify">Response JSON Beautify</button>
-			<button id="submit" style="grid-column: span 2;">Submit</button>
-		</div>
-		<script>
-const method = document.querySelector('#method')
-const url = document.querySelector('#url')
-const req_head = document.querySelector('#req_head')
-const req_body = document.querySelector('#req_body')
-const res = document.querySelector('#res')
-document.querySelector('#req_beautify').onclick = () => [req_head.value, req_body.value] = [JSON.stringify(eval(`(${req_head.value})`), '\n', '\t'), JSON.stringify(eval(`(${req_body.value})`), '\n', '\t')]
-document.querySelector('#res_beautify').onclick = () => res.value = JSON.stringify(JSON.parse(res.value), '\n', '\t')
-document.querySelector('#submit').onclick = async () => res.value = await (await fetch(url.value, { method: method.value, headers: eval(`(${req_head.value})`), body: method.value === 'GET' ? undefined : JSON.stringify(eval(`(${req_body.value})`)) })).text()
-		</script>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Test - HOSS Server 2</title>
+	<style>
+		body {
+			box-sizing: border-box;
+			display: grid;
+			grid-template:
+				"title title"
+				"location location"
+				"req_title res_title"
+				"req_head res" 1fr
+				"req_body res" 1fr
+				"submit submit"
+				/ 1fr 1fr;
+			height: 100vh;
+			margin: 0;
+			padding: 10px;
+			text-align: center;
+		}
+
+		button, textarea {
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1 style="grid-area: title;">HOSS Server 2 Test Tool</h1>
+	<div style="display: flex; grid-area: location;">
+		<select id="method" name="method" title="method">
+			<option value="GET">GET</option>
+			<option value="POST">POST</option>
+			<option value="PUT">PUT</option>
+			<option value="PATCH">PATCH</option>
+			<option value="DELETE">DELETE</option>
+		</select>
+		<input type="text" id="url" name="url" placeholder="URL" style="flex-grow: 1;" />
+	</div>
+	<h3 style="grid-area: req_title;">Request</h3>
+	<textarea id="req_head" name="req_head" placeholder="Request Head" style="grid-area: req_head;">{ "content-type": "application/json" }</textarea>
+	<textarea id="req_body" name="req_body" placeholder="Request Body" style="grid-area: req_body;"></textarea>
+	<h3 style="grid-area: res_title;">Response</h3>
+	<textarea id="res" name="res" placeholder="Response" style="grid-area: res;"></textarea>
+	<button id="submit" style="grid-area: submit;">Submit</button>
+	<script>
+		const beautify = (value) => value === '' ? '' : JSON.stringify(eval(`(${value})`), '\n', '\t')
+		const method = document.querySelector('#method')
+		const url = document.querySelector('#url')
+		const req_head = document.querySelector('#req_head')
+		const req_body = document.querySelector('#req_body')
+		const res = document.querySelector('#res')
+		const submit = document.querySelector('#submit')
+		submit.onclick = async () => res.value = await (await fetch(url.value, { method: method.value, headers: JSON.parse(beautify(req_head.value)), body: ['POST', 'PUT', 'PATCH'].includes(method.value) ? beautify(req_body.value) : undefined })).text()
+		for (const textarea of document.querySelectorAll('textarea'))
+			textarea.onkeydown = (e) => {
+				if (e.key === 'Tab' && !e.ctrlKey && !e.altKey) {
+					if (!e.shiftKey) {
+						const oS = textarea.scrollTop, sS = textarea.selectionStart, sE = textarea.selectionEnd
+						textarea.value = textarea.value.substring(0, sS) + '\t' + textarea.value.substr(sE)
+						textarea.setSelectionRange(sS + 1, sS + 1)
+						textarea.focus()
+						textarea.scrollTop = oS
+					}
+					e.preventDefault()
+				}
+				if (e.shiftKey && e.altKey && e.key === 'F')
+					textarea.value = beautify(textarea.value)
+			}
+		document.onkeyup = (e) => {
+			if (e.ctrlKey && e.key === 'Enter') {
+				submit.onclick()
+				res.focus()
+				e.preventDefault()
+			}
+		}
+	</script>
+</body>
+
 </html>

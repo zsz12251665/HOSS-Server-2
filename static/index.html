@@ -1,20 +1,41 @@
-<html>
-	<head>
-		<title>Home - HOSS Server 2</title>
-	</head>
-	<body>
-		<h1>HOSS Server 2</h1>
-		<h2>Login</h2>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Home - HOSS Server 2</title>
+	<style>
+		@media screen and (min-height: 600px) and (min-width: 800px) {
+			body {
+				height: 600px;
+				margin: calc(50vh - 300px) auto;
+				text-align: center;
+				width: 800px;
+			}
+
+			.flex {
+				display: flex;
+				justify-content: space-around;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<h1>HOSS Server 2</h1>
+	<div class="flex">
 		<form action="/login" method="post">
-			<input type="text" name="username" placeholder="Username" />
-			<input type="password" name="password" placeholder="Password" />
-			<input type="submit" />
+			<h2>Login</h2>
+			<p><input type="text" name="username" placeholder="Username" /></p>
+			<p><input type="password" name="password" placeholder="Password" /></p>
+			<p><input type="submit" /></p>
 		</form>
-		<h2>Register</h2>
 		<form action="/register" method="post">
-			<input type="text" name="username" placeholder="Username" />
-			<input type="password" name="password" placeholder="Password" />
-			<input type="submit" />
+			<h2>Register</h2>
+			<p><input type="text" name="username" placeholder="Username" /></p>
+			<p><input type="password" name="password" placeholder="Password" /></p>
+			<p><input type="submit" /></p>
 		</form>
-	</body>
+	</div>
+</body>
+
 </html>
