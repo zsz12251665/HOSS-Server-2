@@ -1,20 +1,61 @@
 import ORM, { Course, Teacher } from '@/ORM'
+import { wrap } from '@mikro-orm/core'
 import Joi from 'joi'
 import { Context } from 'koa'
+
+const schema = Joi.object({
+	id: Joi.number().integer().min(0).optional(),
+	name: Joi.string().optional(),
+	username: Joi.string().pattern(/\w+$/).allow(null).optional()
+})
+
+const batchSchema = Joi.array().items(Joi.array().ordered(Joi.number().integer().min(0), schema))
 
 const coursesSchema = Joi.object({
 	insert: Joi.array().items(Joi.number().integer().min(0)).optional(),
 	delete: Joi.array().items(Joi.number().integer().min(0)).optional()
 })
 
+interface ITeacher {
+	id?: number,
+	name?: string,
+	user?: string | null
+}
+
+function unserialize(body: any): ITeacher {
+	const teacher: ITeacher = {}
+	if (body.id !== undefined)
+		teacher.id = body.id
+	if (body.name !== undefined)
+		teacher.name = body.name
+	if (body.user !== undefined)
+		teacher.user = body.user
+	return teacher
+}
+
 /** 单个教师 PATCH 请求 */
 export async function single(ctx: Context) {
-	ctx.throw(501)
+	const body = await coursesSchema.validateAsync(ctx.request.body)
+	const repo = ORM.em.getRepository(Teacher)
+	const teacher = await repo.findOne(ctx.params.teacherID)
+	if (teacher === null)
+		ctx.throw(404)
+	wrap(teacher).assign(unserialize(body))
+	await repo.flush()
+	ctx.body = wrap(teacher).toObject()
 }
 
 /** 教师批量 PATCH 请求 */
 export async function batch(ctx: Context) {
-	ctx.throw(501)
+	const body: [any, any][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
+	const bodyMap = new Map(body)
+	const repo = ORM.em.getRepository(Teacher)
+	const teachers = await repo.find(body.map((entry) => entry[0]))
+	if (teachers.length === 0)
+		ctx.throw(404, 'No teacher is found!')
+	teachers.forEach((teacher) => wrap(teacher).assign(unserialize(bodyMap.get(teacher.id))))
+	await repo.flush()
+	ctx.body = teachers.map((teacher) => wrap(teacher).toObject())
 }
 
 /** 修改教师的课程列表（增加/移除） */
