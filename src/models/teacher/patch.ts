@@ -1,5 +1,5 @@
 import ORM, { Course, Teacher } from '@/ORM'
-import { wrap } from '@mikro-orm/core'
+import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
 import { Context } from 'koa'
 
@@ -16,20 +16,14 @@ const coursesSchema = Joi.object({
 	delete: Joi.array().items(Joi.number().integer().min(0)).optional()
 })
 
-interface ITeacher {
-	id?: number,
-	name?: string,
-	user?: string | null
-}
-
-function unserialize(body: any): ITeacher {
-	const teacher: ITeacher = {}
+function unserialize(body: any): EntityData<Teacher> {
+	const teacher: EntityData<Teacher> = {}
 	if (body.id !== undefined)
 		teacher.id = body.id
 	if (body.name !== undefined)
 		teacher.name = body.name
-	if (body.user !== undefined)
-		teacher.user = body.user
+	if (body.username !== undefined)
+		teacher.user = body.username
 	return teacher
 }
 

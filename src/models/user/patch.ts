@@ -1,6 +1,6 @@
 import hash from '@/hash'
 import ORM, { User } from '@/ORM'
-import { wrap } from '@mikro-orm/core'
+import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
 import { Context } from 'koa'
 
@@ -14,16 +14,8 @@ const schema = Joi.object({
 
 const batchSchema = Joi.array().items(Joi.array().ordered(Joi.string(), schema))
 
-interface IUser {
-	identification?: string
-	certificate?: string
-	isAdministrator?: boolean
-	student?: string | null
-	teacher?: number | null
-}
-
-function unserialize(body: any, isAdministrator: boolean = true): IUser {
-	const user: IUser = {}
+function unserialize(body: any, isAdministrator: boolean = true): EntityData<User> {
+	const user: EntityData<User> = {}
 	if (body.username !== undefined)
 		user.identification = body.username
 	if (body.password !== undefined)

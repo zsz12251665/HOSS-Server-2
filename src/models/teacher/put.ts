@@ -1,5 +1,5 @@
 import ORM, { Teacher } from '@/ORM'
-import { wrap } from '@mikro-orm/core'
+import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
 import { Context } from 'koa'
 
@@ -13,13 +13,7 @@ const batchSchema = Joi.array().items(Joi.array().ordered(Joi.number().integer()
 
 const coursesSchema = Joi.array().items(Joi.number().integer().min(0))
 
-interface ITeacher {
-	id: number,
-	name: string,
-	user: string | null
-}
-
-const unserialize = (body: any): ITeacher => ({
+const unserialize = (body: any): EntityData<Teacher> => ({
 	id: body.id,
 	name: body.name,
 	user: body.username
