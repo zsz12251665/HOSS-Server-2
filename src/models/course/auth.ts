@@ -18,7 +18,7 @@ const relatedStudentChecker: matchFunction = async (ctx) => {
 			ctx.state.authorization.isRelatedStudent = false
 		else if (ctx.params.courseID === undefined) {
 			ctx.state.authorization.isRelatedStudent = true
-			ctx.state.authorization.studentNumber = student.id
+			ctx.state.authorization.studentCourses = student.courses.getIdentifiers()
 		} else
 			ctx.state.authorization.isRelatedStudent = student.courses.getIdentifiers().includes(ctx.params.courseID)
 	}
@@ -33,7 +33,7 @@ const relatedTeacherChecker: matchFunction = async (ctx) => {
 			ctx.state.authorization.isRelatedTeacher = false
 		else if (ctx.params.courseID === undefined) {
 			ctx.state.authorization.isRelatedTeacher = true
-			ctx.state.authorization.teacherID = teacher.id
+			ctx.state.authorization.teacherCourses = teacher.courses.getIdentifiers()
 		} else
 			ctx.state.authorization.isRelatedTeacher = teacher.courses.getIdentifiers().includes(ctx.params.courseID)
 	}

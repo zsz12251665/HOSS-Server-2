@@ -6,15 +6,15 @@ import { Task } from './Task'
 export class Homework {
 	[PrimaryKeyType]: [string, string]
 
-	@Property()
-	filename?: string
-
-	@Property()
-	group?: string
+	@ManyToOne({ primary: true })
+	task!: Task
 
 	@ManyToOne({ primary: true })
 	student!: Student
 
-	@ManyToOne({ primary: true })
-	task!: Task
+	@Property()
+	filename: string | null = null
+
+	@Property()
+	group: string | null = null
 }

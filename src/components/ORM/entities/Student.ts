@@ -14,7 +14,7 @@ export class Student {
 	name!: string
 
 	@Property()
-	class?: string
+	class: string | null = null
 
 	@OneToOne(() => User, 'student')
 	user: User | null = null

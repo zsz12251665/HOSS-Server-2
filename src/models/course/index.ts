@@ -1,4 +1,5 @@
 import Router from '@koa/router'
+import taskRouter from '../task'
 import * as authFilter from './auth'
 import * as deleteHandler from './delete'
 import * as getHandler from './get'
@@ -21,7 +22,7 @@ courseRouter.get('/:courseID/students', authFilter.studentOrTeacherOrAdministrat
 courseRouter.put('/:courseID/students', authFilter.administratorOnly, putHandler.students)
 courseRouter.patch('/:courseID/students', authFilter.administratorOnly, patchHandler.students)
 
-courseRouter.get('/:courseID/tasks', authFilter.studentOrTeacherOnly, getHandler.tasks)
+courseRouter.use('/:courseID', taskRouter.routes()) // /:courseID/tasks
 
 courseRouter.get('/:courseID/teachers', authFilter.studentOrTeacherOrAdministrator, getHandler.teachers)
 courseRouter.put('/:courseID/teachers', authFilter.administratorOnly, putHandler.teachers)

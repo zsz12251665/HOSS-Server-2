@@ -12,14 +12,16 @@ teacherRouter.get('/', getHandler.batch)
 teacherRouter.put('/', putHandler.batch)
 teacherRouter.patch('/', patchHandler.batch)
 
-teacherRouter.get('/:teacherID', authFilter.teacherOrAdministrator, getHandler.single)
+teacherRouter.get('/:teacherID', authFilter.selfOrAdministrator, getHandler.single)
 teacherRouter.all('/:teacherID', authFilter.administratorOnly)
 teacherRouter.put('/:teacherID', putHandler.single)
 teacherRouter.patch('/:teacherID', patchHandler.single)
 teacherRouter.delete('/:teacherID', deleteHandler.single)
 
-teacherRouter.get('/:teacherID/courses', authFilter.teacherOrAdministrator, getHandler.courses)
+teacherRouter.get('/:teacherID/courses', authFilter.selfOrAdministrator, getHandler.courses)
 teacherRouter.put('/:teacherID/courses', authFilter.administratorOnly, putHandler.courses)
 teacherRouter.patch('/:teacherID/courses', authFilter.administratorOnly, patchHandler.courses)
+
+teacherRouter.get('/:teacherID/tasks', authFilter.selfOnly, getHandler.tasks)
 
 export default teacherRouter

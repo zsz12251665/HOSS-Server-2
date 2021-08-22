@@ -5,7 +5,10 @@ import { User } from './User'
 
 @Entity()
 export class Task {
-	[PrimaryKeyType]: string
+	[PrimaryKeyType]: [string, string]
+
+	@ManyToOne({ primary: true })
+	course!: Course
 
 	@PrimaryKey()
 	id!: string
@@ -14,16 +17,13 @@ export class Task {
 	title!: string
 
 	@Property()
-	deadline?: Date
+	deadline: Date | null = null
 
 	@Property({ columnType: 'text' })
-	description?: string
+	description: string = ''
 
 	@Property()
 	pattern: string = ':name:-:id:'
-
-	@ManyToOne()
-	course!: Course
 
 	@OneToMany(() => Homework, 'task', { hidden: true })
 	homeworks = new Collection<Homework>(this)

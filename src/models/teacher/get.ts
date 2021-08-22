@@ -1,4 +1,4 @@
-import ORM, { Teacher } from '@/ORM'
+import ORM, { Task, Teacher } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
@@ -28,4 +28,14 @@ export async function courses(ctx: Context) {
 		ctx.throw(404)
 	else
 		ctx.body = teacher.courses.getIdentifiers()
+}
+
+/** 教师的任务列表 GET 请求 */
+export async function tasks(ctx: Context) {
+	const repo = ORM.em.getRepository(Teacher)
+	const teacher = await repo.findOne(ctx.params.teacherID, ['courses'])
+	if (teacher === null)
+		ctx.throw(404)
+	const tasks = await ORM.em.find(Task, { course: { $in: teacher.courses.getItems() } })
+	ctx.body = tasks.map((task) => [task.course.id, task.id])
 }
