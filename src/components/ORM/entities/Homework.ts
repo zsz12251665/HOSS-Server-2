@@ -1,10 +1,10 @@
-import { Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
 import { Student } from './Student'
 import { Task } from './Task'
 
 @Entity()
 export class Homework {
-	[PrimaryKeyType]: [string, number]
+	[PrimaryKeyType]: [string, string]
 
 	@Property()
 	filename?: string

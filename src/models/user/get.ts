@@ -6,7 +6,7 @@ import { Context } from 'koa'
 /** 单个用户 GET 请求 */
 export async function single(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
-	const user = await repo.findOne(ctx.params.username)
+	const user = await repo.findOne(ctx.params.userID)
 	if (user === null)
 		ctx.throw(404)
 	else
@@ -20,10 +20,10 @@ export async function batch(ctx: Context) {
 	ctx.body = users.map((user) => wrap(user).toObject())
 }
 
-/** 获取用户管理的任务列表 */
+/** 用户管理的任务列表 GET 请求 */
 export async function tasks(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
-	const user = await repo.findOne(ctx.params.username, ['tasks'])
+	const user = await repo.findOne(ctx.params.userID, ['tasks'])
 	if (user === null)
 		ctx.throw(404)
 	else

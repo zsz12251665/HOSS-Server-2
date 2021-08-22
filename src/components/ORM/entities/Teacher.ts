@@ -4,16 +4,16 @@ import { User } from './User'
 
 @Entity()
 export class Teacher {
-	[PrimaryKeyType]: number
+	[PrimaryKeyType]: string
 
 	@PrimaryKey()
-	id!: number
+	id!: string
 
 	@Property()
 	name!: string
 
-	@OneToOne(() => User, 'teacher', { serializedName: 'username' })
-	user?: User
+	@OneToOne(() => User, 'teacher')
+	user: User | null = null
 
 	@ManyToMany(() => Course, 'teachers', { hidden: true })
 	courses = new Collection<Course>(this)

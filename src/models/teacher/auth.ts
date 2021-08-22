@@ -4,7 +4,7 @@ import { filterMiddleware, matchFunction } from '../filter'
 const administratorChecker: matchFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
 		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.username)
+		const user = await repo.findOne(ctx.state.authorization.userID)
 		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
 	return ctx.state.authorization.isAdministrator
@@ -12,9 +12,9 @@ const administratorChecker: matchFunction = async (ctx) => {
 
 const teacherOrAdministratorChecker: matchFunction = async (ctx) => {
 	const repo = ORM.em.getRepository(User)
-	const user = await repo.findOne(ctx.state.authorization.username)
+	const user = await repo.findOne(ctx.state.authorization.userID)
 	ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
-	return <number>ctx.params.teacherID === user?.teacher?.id || ctx.state.authorization.isAdministrator
+	return ctx.params.teacherID === user?.teacher?.id || ctx.state.authorization.isAdministrator
 }
 
 /** 过滤器：仅管理员 */

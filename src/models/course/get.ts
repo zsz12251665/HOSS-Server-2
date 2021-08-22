@@ -2,7 +2,6 @@ import ORM, { Course } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-
 /** 单个课程 GET 请求 */
 export async function single(ctx: Context) {
 	const repo = ORM.em.getRepository(Course)
@@ -20,7 +19,7 @@ export async function batch(ctx: Context) {
 	ctx.body = courses.map((course) => wrap(course).toObject())
 }
 
-/** 获取课程的学生列表 */
+/** 课程的学生列表 GET 请求 */
 export async function students(ctx: Context) {
 	const repo = ORM.em.getRepository(Course)
 	const course = await repo.findOne(ctx.params.courseID, ['students'])
@@ -30,7 +29,7 @@ export async function students(ctx: Context) {
 		ctx.body = course.students.getIdentifiers()
 }
 
-/** 获取课程的任务列表 */
+/** 课程的任务列表 GET 请求 */
 export async function tasks(ctx: Context) {
 	const repo = ORM.em.getRepository(Course)
 	const course = await repo.findOne(ctx.params.courseID, ['tasks'])
@@ -40,7 +39,7 @@ export async function tasks(ctx: Context) {
 		ctx.body = course.tasks.getIdentifiers()
 }
 
-/** 获取课程的教师列表 */
+/** 课程的教师列表 GET 请求 */
 export async function teachers(ctx: Context) {
 	const repo = ORM.em.getRepository(Course)
 	const course = await repo.findOne(ctx.params.courseID, ['teachers'])

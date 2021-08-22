@@ -5,20 +5,20 @@ import { Teacher } from './Teacher'
 
 @Entity()
 export class Course {
-	[PrimaryKeyType]: number
+	[PrimaryKeyType]: string
 
 	@PrimaryKey()
-	id!: number
+	id!: string
 
 	@Property()
 	name!: string
 
-	@ManyToMany()
+	@ManyToMany({ hidden: true })
 	students = new Collection<Student>(this)
 
-	@ManyToMany()
+	@ManyToMany({ hidden: true })
 	teachers = new Collection<Teacher>(this)
 
-	@OneToMany(() => Task, 'course')
+	@OneToMany(() => Task, 'course', { hidden: true })
 	tasks = new Collection<Task>(this)
 }

@@ -20,7 +20,7 @@ export async function batch(ctx: Context) {
 	ctx.body = teachers.map((teacher) => wrap(teacher).toObject())
 }
 
-/** 获取教师的课程列表 */
+/** 教师的课程列表 GET 请求 */
 export async function courses(ctx: Context) {
 	const repo = ORM.em.getRepository(Teacher)
 	const teacher = await repo.findOne(ctx.params.teacherID, ['courses'])

@@ -9,19 +9,19 @@ import * as putHandler from './put'
 const userRouter = new Router({ prefix: '/users' })
 
 userRouter.post('/', postHandler.register)
-userRouter.post('/:username/token', postHandler.login)
+userRouter.post('/:userID/token', postHandler.login)
 
 userRouter.all('/', authFilter.administratorOnly)
 userRouter.get('/', getHandler.batch)
 userRouter.put('/', putHandler.batch)
 userRouter.patch('/', patchHandler.batch)
 
-userRouter.all('/:username', authFilter.selfOrAdministrator)
-userRouter.get('/:username', getHandler.single)
-userRouter.put('/:username', authFilter.administratorOnly, putHandler.single)
-userRouter.patch('/:username', patchHandler.single)
-userRouter.delete('/:username', deleteHandler.single)
+userRouter.all('/:userID', authFilter.selfOrAdministrator)
+userRouter.get('/:userID', getHandler.single)
+userRouter.put('/:userID', authFilter.administratorOnly, putHandler.single)
+userRouter.patch('/:userID', patchHandler.single)
+userRouter.delete('/:userID', deleteHandler.single)
 
-userRouter.get('/:username/tasks', authFilter.selfOnly, getHandler.tasks)
+userRouter.get('/:userID/tasks', authFilter.selfOnly, getHandler.tasks)
 
 export default userRouter

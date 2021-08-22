@@ -4,13 +4,13 @@ import { filterMiddleware, matchFunction } from '../filter'
 const administratorChecker: matchFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
 		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.username)
+		const user = await repo.findOne(ctx.state.authorization.userID)
 		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
 	return ctx.state.authorization.isAdministrator
 }
 
-const selfChecker: matchFunction = async (ctx) => ctx.state.authorization.username === ctx.params.username
+const selfChecker: matchFunction = async (ctx) => ctx.state.authorization.userID === ctx.params.userID
 
 /** 过滤器：仅管理员 */
 export const administratorOnly = filterMiddleware(administratorChecker)

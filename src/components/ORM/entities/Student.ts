@@ -8,7 +8,7 @@ export class Student {
 	[PrimaryKeyType]: string
 
 	@PrimaryKey()
-	number!: string
+	id!: string
 
 	@Property()
 	name!: string
@@ -17,11 +17,11 @@ export class Student {
 	class?: string
 
 	@OneToOne(() => User, 'student')
-	user?: User
+	user: User | null = null
 
-	@ManyToMany(() => Course, 'students')
+	@ManyToMany(() => Course, 'students', { hidden: true })
 	courses = new Collection<Course>(this)
 
-	@OneToMany(() => Homework, 'student')
+	@OneToMany(() => Homework, 'student', { hidden: true })
 	homeworks = new Collection<Homework>(this)
 }

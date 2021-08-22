@@ -1,5 +1,4 @@
 import 'module-alias/register'
-import hash from '@/hash'
 import ORM, { User } from '@/ORM'
 import { randomBytes } from 'crypto'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
@@ -95,19 +94,19 @@ async function updateORM(isInitializing: boolean = false) {
 		console.log('Creating the first administrator...')
 		const administrator = await ask([
 			{
-				name: 'identification',
+				name: 'id',
 				type: 'input',
 				message: 'Administrator Username:',
 				default: 'root'
 			}, {
-				name: 'certificate',
+				name: 'password',
 				type: 'password',
 				mask: '*',
-				message: 'Administrator Password:',
-				filter: (input) => hash(input)
+				message: 'Administrator Password:'
 			}
 		])
-		await ORM.em.persistAndFlush(ORM.em.create(User, Object.assign(administrator, { isAdministrator: true })))
+		administrator.isAdministrator = true
+		await ORM.em.persistAndFlush(ORM.em.create(User, administrator))
 	} else {
 		const { updateSchema } = await ask([{
 			name: 'updateSchema',
