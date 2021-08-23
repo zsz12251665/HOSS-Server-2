@@ -2,7 +2,6 @@ import ORM, { User } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-
 /** 单个用户 GET 请求 */
 export async function single(ctx: Context) {
 	const repo = ORM.em.getRepository(User)
@@ -27,5 +26,5 @@ export async function tasks(ctx: Context) {
 	if (user === null)
 		ctx.throw(404)
 	else
-		ctx.body = user.tasks.getIdentifiers()
+		ctx.body = user.tasks.getItems().map((task) => wrap(task).toObject())
 }

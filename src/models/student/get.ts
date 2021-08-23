@@ -2,7 +2,6 @@ import ORM, { Task, Student } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
 import { Context } from 'koa'
 
-
 /** 单个学生 GET 请求 */
 export async function single(ctx: Context) {
 	const repo = ORM.em.getRepository(Student)
@@ -36,6 +35,6 @@ export async function tasks(ctx: Context) {
 	const student = await repo.findOne(ctx.params.studentID, ['courses'])
 	if (student === null)
 		ctx.throw(404)
-	const tasks = await ORM.em.find(Task, { course: { $in: student.courses.getItems() } })
-	ctx.body = tasks.map((task) => [task.course.id, task.id])
+	const tasks = await ORM.em.find(Task, { course: { id: { $in: student.courses.getIdentifiers() } } })
+	ctx.body = tasks.map((task) => wrap(task).toObject())
 }

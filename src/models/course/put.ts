@@ -5,8 +5,8 @@ import { Context } from 'koa'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
-	id: idSchema.optional(),
-	name: Joi.string().optional(),
+	id: idSchema.required(),
+	name: Joi.string().required(),
 })
 const batchSchema = Joi.array().items(schema)
 const setSchema = Joi.array().items(idSchema)
@@ -34,12 +34,12 @@ export async function batch(ctx: Context) {
 	body.forEach((data) => {
 		let course = courses[courseIDs.indexOf(data.id)]
 		if (course === undefined) {
-			course = repo.create(body)
+			course = repo.create(data)
 			repo.persist(course)
 			courses.push(course)
 			courseIDs.push(course.id)
 		} else
-			wrap(course).assign(body)
+			wrap(course).assign(data)
 	})
 	await repo.flush()
 	ctx.body = courses.map((course) => wrap(course).toObject())
