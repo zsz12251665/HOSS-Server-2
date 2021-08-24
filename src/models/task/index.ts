@@ -1,7 +1,10 @@
 import Router from '@koa/router'
 import homeworkRouter from '../homework'
+import paramValidator from './param'
 
 const taskRouter = new Router({ prefix: '/tasks' })
+
+taskRouter.use(paramValidator)
 
 taskRouter.get('/')
 taskRouter.put('/')
