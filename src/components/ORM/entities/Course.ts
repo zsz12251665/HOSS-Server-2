@@ -5,7 +5,7 @@ import { Teacher } from './Teacher'
 
 @Entity()
 export class Course {
-	[PrimaryKeyType]: string
+	[PrimaryKeyType]: Course['id']
 
 	@PrimaryKey()
 	id!: string
@@ -19,6 +19,6 @@ export class Course {
 	@ManyToMany({ hidden: true })
 	teachers = new Collection<Teacher>(this)
 
-	@OneToMany(() => Task, 'course', { hidden: true })
+	@OneToMany(() => Task, 'course', { hidden: true, orphanRemoval: true })
 	tasks = new Collection<Task>(this)
 }

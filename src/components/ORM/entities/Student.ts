@@ -5,7 +5,7 @@ import { User } from './User'
 
 @Entity()
 export class Student {
-	[PrimaryKeyType]: string
+	[PrimaryKeyType]: Student['id']
 
 	@PrimaryKey()
 	id!: string
@@ -16,12 +16,12 @@ export class Student {
 	@Property()
 	class: string | null = null
 
-	@OneToOne(() => User, 'student')
+	@OneToOne(() => User, 'student', { onDelete: 'set null' })
 	user: User | null = null
 
 	@ManyToMany(() => Course, 'students', { hidden: true })
 	courses = new Collection<Course>(this)
 
-	@OneToMany(() => Homework, 'student', { hidden: true })
+	@OneToMany(() => Homework, 'student', { hidden: true, orphanRemoval: true })
 	homeworks = new Collection<Homework>(this)
 }

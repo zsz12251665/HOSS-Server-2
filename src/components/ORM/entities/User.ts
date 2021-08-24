@@ -8,7 +8,7 @@ const encrypt = (content: BinaryLike) => createHash('sha256').update(content).di
 
 @Entity()
 export class User {
-	[PrimaryKeyType]: string
+	[PrimaryKeyType]: User['id']
 
 	@PrimaryKey()
 	id!: string
@@ -28,10 +28,10 @@ export class User {
 	@Property()
 	isAdministrator: boolean = false
 
-	@OneToOne()
+	@OneToOne({ onDelete: 'set null' })
 	student: Student | null = null
 
-	@OneToOne()
+	@OneToOne({ onDelete: 'set null' })
 	teacher: Teacher | null = null
 
 	@ManyToMany({ hidden: true })
