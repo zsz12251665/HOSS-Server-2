@@ -1,9 +1,41 @@
-<html>
-	<head>
-		<title>Home - HOSS Server 2</title>
-	</head>
-	<body>
-		<h1>HOSS Server 2</h1>
-		<p>It works!</p>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Home - HOSS Server 2</title>
+	<style>
+		@media screen and (min-height: 600px) and (min-width: 800px) {
+			body {
+				height: 600px;
+				margin: calc(50vh - 300px) auto;
+				text-align: center;
+				width: 800px;
+			}
+
+			.flex {
+				display: flex;
+				justify-content: space-around;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<h1>HOSS Server 2</h1>
+	<div class="flex">
+		<form action="/login" method="post">
+			<h2>Login</h2>
+			<p><input type="text" name="id" placeholder="Username" /></p>
+			<p><input type="password" name="password" placeholder="Password" /></p>
+			<p><input type="submit" /></p>
+		</form>
+		<form action="/register" method="post">
+			<h2>Register</h2>
+			<p><input type="text" name="id" placeholder="Username" /></p>
+			<p><input type="password" name="password" placeholder="Password" /></p>
+			<p><input type="submit" /></p>
+		</form>
+	</div>
+</body>
+
 </html>

@@ -1,10 +1,12 @@
 {
 	"name": "hoss-server",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "The server scripts for HOSS (Homework Online Submit System)",
 	"scripts": {
-		"init": "node ./src/init.js",
-		"start": "node ./src/app.js"
+		"config": "ts-node ./src/config.ts",
+		"purge": "rm -r temp dist migrations",
+		"start": "ts-node ./src/app.ts",
+		"test": "nodemon ./src/app.ts"
 	},
 	"author": "zsz12251665",
 	"license": "MIT",
@@ -13,15 +15,39 @@
 		"url": "https://github.com/zsz12251665/HOSS-Server-2.git"
 	},
 	"dependencies": {
-		"archiver": "^5.3.0",
-		"connect-multiparty": "^2.2.0",
-		"cors": "^2.8.5",
-		"express": "^4.17.1",
+		"@koa/cors": "^3.1.0",
+		"@koa/router": "^10.1.0",
+		"@mikro-orm/core": "^4.5.7",
+		"@mikro-orm/migrations": "^4.5.7",
+		"@mikro-orm/reflection": "^4.5.7",
 		"inquirer": "^8.0.0",
+		"joi": "^17.4.2",
 		"jsonwebtoken": "^8.5.1",
-		"mysql": "^2.18.1"
+		"koa": "^2.13.1",
+		"koa-body": "^4.2.0",
+		"koa-static": "^5.0.0",
+		"module-alias": "^2.2.2"
 	},
 	"devDependencies": {
-		"eslint": "^7.21.0"
+		"@types/inquirer": "^7.3.3",
+		"@types/jsonwebtoken": "^8.5.4",
+		"@types/koa": "^2.13.4",
+		"@types/koa__cors": "^3.0.3",
+		"@types/koa__router": "^8.0.7",
+		"@types/koa-static": "^4.0.2",
+		"@types/node": "^16.4.7",
+		"nodemon": "^2.0.12",
+		"ts-node": "^10.1.0",
+		"typescript": "^4.3.5"
+	},
+	"optionalDependencies": {
+		"@mikro-orm/mariadb": "^4.5.7",
+		"@mikro-orm/mysql": "^4.5.7",
+		"@mikro-orm/postgresql": "^4.5.7",
+		"@mikro-orm/sqlite": "^4.5.7"
+	},
+	"_moduleAliases": {
+		"@": "./src/components",
+		"@config": "./config"
 	}
 }

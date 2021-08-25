@@ -1,2 +1,5 @@
 .vscode
+dist
+migrations
 node_modules
+temp
