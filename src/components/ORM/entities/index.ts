@@ -1,3 +1,4 @@
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import { Course } from './Course'
 import { Homework } from './Homework'
 import { Student } from './Student'
@@ -12,4 +13,7 @@ export * from './Task'
 export * from './Teacher'
 export * from './User'
 
-export default [Course, Homework, Student, Task, Teacher, User]
+export default {
+	entities: [Course, Homework, Student, Task, Teacher, User],
+	metadataProvider: TsMorphMetadataProvider
+}

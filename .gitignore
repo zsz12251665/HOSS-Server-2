@@ -1,4 +1,5 @@
 .vscode
+config
 dist
 migrations
 node_modules

@@ -1,16 +1,12 @@
-import { ConnectionOptions, EntityManager, MikroORM } from '@mikro-orm/core'
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
-import entities from './entities'
+import config from '@config/orm.json'
+import { EntityManager, MikroORM } from '@mikro-orm/core'
+import entityConfiguration from './entities'
 
 class ORM {
-	static instance?: MikroORM
+	private static instance?: MikroORM
 
-	/**
-	 * ORM 初始化函数
-	 * @param {ConnectionOptions | undefined} config 数据库配置
-	 */
-	static async init(config?: ConnectionOptions) {
-		ORM.instance = await MikroORM.init(Object.assign({ entities, metadataProvider: TsMorphMetadataProvider }, config ?? await import('@config/orm.json')))
+	static async init(): Promise<void> {
+		ORM.instance = await MikroORM.init(<any>Object.assign({}, entityConfiguration, config))
 	}
 
 	static get orm(): MikroORM {
