@@ -1,9 +1,10 @@
 import 'module-alias/register'
 import configureJWT from '@/JWT/config'
 import configureORM from '@/ORM/config'
+import configureOSS from '@/OSS/config'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { prompt as ask, Separator } from 'inquirer'
-import os from 'os'
+import { tmpdir } from 'os'
 
 const configPath = 'config/app.json'
 
@@ -21,7 +22,7 @@ async function configureApp() {
 			name: 'tempDir',
 			type: 'string',
 			message: 'Temporary Directory:',
-			default: os.tmpdir(),
+			default: tmpdir(),
 			validate: (input) => existsSync(input)
 		}
 	])
@@ -33,6 +34,7 @@ const functionMap = new Map([
 	['App', configureApp],
 	['ORM', configureORM],
 	['JWT', configureJWT],
+	['OSS', configureOSS]
 ])
 
 async function main() {
