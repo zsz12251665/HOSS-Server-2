@@ -4,28 +4,19 @@ import configureORM from '@/ORM/config'
 import configureOSS from '@/OSS/config'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { prompt as ask, Separator } from 'inquirer'
-import { tmpdir } from 'os'
 
 const configPath = 'config/app.json'
 
 async function configureApp() {
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	console.log('----- App Config -----')
-	const config = await ask([
-		{
-			name: 'port',
-			type: 'number',
-			message: 'Port:',
-			default: defaultConfig.port || 80,
-			validate: (input) => input ? true : 'Port should not be empty!'
-		}, {
-			name: 'tempDir',
-			type: 'string',
-			message: 'Temporary Directory:',
-			default: tmpdir(),
-			validate: (input) => existsSync(input)
-		}
-	])
+	const config = await ask([{
+		name: 'port',
+		type: 'number',
+		message: 'Port:',
+		default: defaultConfig.port || 80,
+		validate: (input) => input ? true : 'Port should not be empty!'
+	}])
 	writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 	console.log('App config is up to date!')
 }

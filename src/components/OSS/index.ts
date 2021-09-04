@@ -1,9 +1,9 @@
 import config from '@config/oss.json'
 import BaseOSS from './base'
-import LocalOSS from './local'
+import SampleOSS from './sample'
 
 const functionMap = new Map<string, (config: any) => BaseOSS>([
-	['local', (config) => new LocalOSS(config)]
+	['SampleOSS', (config) => new SampleOSS(config)]
 ])
 
 class OSS {

@@ -1,11 +1,11 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { prompt as ask } from 'inquirer'
-import LocalOSS from './local/config'
+import SampleOSS from './sample/config'
 
 const configPath = 'config/oss.json'
 
 const functionMap = new Map<string, (config: any) => Promise<any>>([
-	['local', LocalOSS]
+	['SampleOSS', SampleOSS]
 ])
 
 async function configure() {
