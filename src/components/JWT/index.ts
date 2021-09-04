@@ -1,28 +1,23 @@
 import config from '@config/jwt.json'
-import { JwtPayload, sign, verify } from 'jsonwebtoken'
+import { JwtPayload, sign as signJWT, verify } from 'jsonwebtoken'
 import options from './options'
 
 /**
- * 使用给定配置签发令牌
- * @param {object} content 要签发的令牌内容
- * @param {string} optionName 要签发的令牌配置名
- * @returns {string} 签发的令牌内容
+ * 签发 JWT 令牌
+ * @param {object} content 令牌内容
+ * @param {string} optionName 令牌配置名
+ * @returns {string} JWT 令牌
  */
-export function encode(content: object, optionName: string = 'default'): string {
-	return sign(content, config.secret, Object.assign({ issuer: config.issuer }, options.get(options.has(optionName) ? optionName : 'default')))
+export function sign(content: object, optionName: string = 'default'): string {
+	return signJWT(content, config.secret, Object.assign({ issuer: config.issuer }, options.get(options.has(optionName) ? optionName : 'default')))
 }
 
 /**
- * 解密令牌
- * @param {string} token 签发的令牌内容
- * @returns {JwtPayload | null} 返回 null 时表示令牌失效，否则返回令牌内容
+ * 解析 JWT 令牌
+ * @param {string} token JWT 令牌
+ * @returns {JwtPayload} 令牌内容
+ * @throws {JsonWebTokenError} JWT 错误
  */
-export function decode(token: string): JwtPayload | null {
-	try {
-		return <JwtPayload>verify(token, config.secret, { issuer: config.issuer })
-	} catch (err) {
-		return null
-	}
+export function interpret(token: string): JwtPayload {
+	return <JwtPayload>verify(token, config.secret, { issuer: config.issuer })
 }
-
-export default { encode, decode }

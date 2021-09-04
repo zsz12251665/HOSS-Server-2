@@ -1,7 +1,7 @@
 import ORM, { Task, Student, Teacher, User } from '@/ORM'
-import { filterMiddleware, matchFunction } from '../filter'
+import { filterMiddleware, filterFunction } from '../filter'
 
-const relatedStudentChecker: matchFunction = async (ctx) => {
+const relatedStudentChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedStudent === undefined) {
 		const repo = ORM.em.getRepository(Student)
 		const student = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
@@ -10,7 +10,7 @@ const relatedStudentChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isRelatedStudent
 }
 
-const relatedTeacherChecker: matchFunction = async (ctx) => {
+const relatedTeacherChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedTeacher === undefined) {
 		const repo = ORM.em.getRepository(Teacher)
 		const teacher = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
@@ -19,7 +19,7 @@ const relatedTeacherChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isRelatedTeacher
 }
 
-const monitorChecker: matchFunction = async (ctx) => {
+const monitorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isMonitor === undefined) {
 		const repo = ORM.em.getRepository(Task)
 		const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID], ['monitors'])
@@ -28,7 +28,7 @@ const monitorChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isMonitor
 }
 
-const studentChecker: matchFunction = async (ctx) => {
+const studentChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isStudent === undefined) {
 		const repo = ORM.em.getRepository(User)
 		const user = await repo.findOne(ctx.state.authorization.userID)

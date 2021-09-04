@@ -1,11 +1,11 @@
-import { encode } from '@/JWT'
+import { sign } from '@/JWT'
 import BaseOSS from '../base'
 
 class SampleOSS extends BaseOSS {
 	async upload(identifier: string) {
 		return {
 			url: `${identifier}`,
-			token: encode({
+			token: sign({
 				action: 'upload',
 				object: identifier
 			})
@@ -15,7 +15,7 @@ class SampleOSS extends BaseOSS {
 	async download(identifier: string) {
 		return {
 			url: `${identifier}`,
-			token: encode({
+			token: sign({
 				action: 'download',
 				object: identifier
 			})
@@ -27,7 +27,7 @@ class SampleOSS extends BaseOSS {
 	async archive(identifiers: any) {
 		return {
 			url: 'package.zip',
-			token: encode({
+			token: sign({
 				action: 'download',
 				object: 'package.zip'
 			})

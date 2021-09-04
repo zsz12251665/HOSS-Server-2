@@ -1,7 +1,7 @@
 import ORM, { User } from '@/ORM'
-import { filterMiddleware, matchFunction } from '../filter'
+import { filterMiddleware, filterFunction } from '../filter'
 
-const administratorChecker: matchFunction = async (ctx) => {
+const administratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
 		const repo = ORM.em.getRepository(User)
 		const user = await repo.findOne(ctx.state.authorization.userID)
@@ -10,7 +10,7 @@ const administratorChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isAdministrator
 }
 
-const selfChecker: matchFunction = async (ctx) => {
+const selfChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isResourceTeacher === undefined) {
 		const repo = ORM.em.getRepository(User)
 		const user = await repo.findOne(ctx.state.authorization.userID)
@@ -19,7 +19,7 @@ const selfChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isResourceTeacher
 }
 
-const selfOrAdministratorChecker: matchFunction = async (ctx) => {
+const selfOrAdministratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isResourceTeacher === undefined || ctx.state.authorization.isAdministrator === undefined) {
 		const repo = ORM.em.getRepository(User)
 		const user = await repo.findOne(ctx.state.authorization.userID)

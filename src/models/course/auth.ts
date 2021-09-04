@@ -1,7 +1,7 @@
 import ORM, { Student, Teacher, User } from '@/ORM'
-import { filterMiddleware, matchFunction } from '../filter'
+import { filterMiddleware, filterFunction } from '../filter'
 
-const administratorChecker: matchFunction = async (ctx) => {
+const administratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
 		const repo = ORM.em.getRepository(User)
 		const user = await repo.findOne(ctx.state.authorization.userID)
@@ -10,7 +10,7 @@ const administratorChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isAdministrator
 }
 
-const relatedStudentChecker: matchFunction = async (ctx) => {
+const relatedStudentChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedStudent === undefined) {
 		const repo = ORM.em.getRepository(Student)
 		const student = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
@@ -25,7 +25,7 @@ const relatedStudentChecker: matchFunction = async (ctx) => {
 	return ctx.state.authorization.isRelatedStudent
 }
 
-const relatedTeacherChecker: matchFunction = async (ctx) => {
+const relatedTeacherChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedTeacher === undefined) {
 		const repo = ORM.em.getRepository(Teacher)
 		const teacher = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
