@@ -3,8 +3,7 @@ import { filterMiddleware, filterFunction } from '../filter'
 
 const administratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID)
+		const user = await ORM.em.findOne(User, <string>ctx.state.authorization.userID)
 		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
 	return ctx.state.authorization.isAdministrator
@@ -12,30 +11,18 @@ const administratorChecker: filterFunction = async (ctx) => {
 
 const relatedStudentChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedStudent === undefined) {
-		const repo = ORM.em.getRepository(Student)
-		const student = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
-		if (student === null)
-			ctx.state.authorization.isRelatedStudent = false
-		else if (ctx.params.courseID === undefined) {
-			ctx.state.authorization.isRelatedStudent = true
-			ctx.state.authorization.studentCourses = student.courses.getIdentifiers()
-		} else
-			ctx.state.authorization.isRelatedStudent = student.courses.getIdentifiers().includes(ctx.params.courseID)
+		const student = await ORM.em.findOne(Student, { user: ctx.state.authorization.userID }, ['courses'])
+		ctx.state.authorization.isRelatedStudent = student !== null && (ctx.params.courseID === undefined || student.courses.getIdentifiers().includes(ctx.params.courseID))
+		ctx.state.authorization.student = student
 	}
 	return ctx.state.authorization.isRelatedStudent
 }
 
 const relatedTeacherChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedTeacher === undefined) {
-		const repo = ORM.em.getRepository(Teacher)
-		const teacher = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
-		if (teacher === null)
-			ctx.state.authorization.isRelatedTeacher = false
-		else if (ctx.params.courseID === undefined) {
-			ctx.state.authorization.isRelatedTeacher = true
-			ctx.state.authorization.teacherCourses = teacher.courses.getIdentifiers()
-		} else
-			ctx.state.authorization.isRelatedTeacher = teacher.courses.getIdentifiers().includes(ctx.params.courseID)
+		const teacher = await ORM.em.findOne(Teacher, { user: ctx.state.authorization.userID }, ['courses'])
+		ctx.state.authorization.isRelatedTeacher = teacher !== null && (ctx.params.courseID === undefined || teacher.courses.getIdentifiers().includes(ctx.params.courseID))
+		ctx.state.authorization.teacher = teacher
 	}
 	return ctx.state.authorization.isRelatedTeacher
 }
@@ -47,4 +34,4 @@ export const administratorOnly = filterMiddleware(administratorChecker)
 export const studentOrTeacherOnly = filterMiddleware(async (ctx) => await relatedStudentChecker(ctx) || await relatedTeacherChecker(ctx))
 
 /** 过滤器：学生、教师或管理员 */
-export const studentOrTeacherOrAdministrator = filterMiddleware(async (ctx) => await relatedStudentChecker(ctx) || await relatedTeacherChecker(ctx) || await administratorChecker(ctx))
+export const studentOrTeacherOrAdministrator = filterMiddleware(async (ctx) => await administratorChecker(ctx) || await relatedStudentChecker(ctx) || await relatedTeacherChecker(ctx))

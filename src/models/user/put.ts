@@ -1,7 +1,7 @@
 import ORM, { User } from '@/ORM'
 import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
@@ -14,7 +14,7 @@ const schema = Joi.object({
 const batchSchema = Joi.array().items(schema)
 
 /** 单个用户 PUT 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const body: EntityData<User> = await schema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
 	let user = await repo.findOne(ctx.params.userID)
@@ -28,7 +28,7 @@ export async function single(ctx: Context) {
 }
 
 /** 用户批量 PUT 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const body: EntityData<User>[] = await batchSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
 	const users = await repo.find(body.map((data) => data.id))

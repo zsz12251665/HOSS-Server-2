@@ -1,7 +1,7 @@
 import ORM, { Task, User } from '@/ORM'
 import { EntityData, Primary, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
@@ -18,7 +18,7 @@ const setSchema = Joi.object({
 })
 
 /** 单个任务 PATCH 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const body: EntityData<Task> = await schema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Task)
 	const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID])
@@ -30,7 +30,7 @@ export async function single(ctx: Context) {
 }
 
 /** 任务批量 PATCH 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const body: [string, EntityData<Task>][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
 	const bodyMap = new Map(body)
 	const repo = ORM.em.getRepository(Task)
@@ -43,7 +43,7 @@ export async function batch(ctx: Context) {
 }
 
 /** 任务的助教列表 PATCH 请求 */
-export async function monitors(ctx: Context) {
+export async function monitors(ctx: RouterContext) {
 	const body: { insert?: string[], delete?: string[] } = await setSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Task)
 	const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID], ['monitors'])

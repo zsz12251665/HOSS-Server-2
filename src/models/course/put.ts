@@ -1,7 +1,7 @@
 import ORM, { Course } from '@/ORM'
 import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
@@ -12,7 +12,7 @@ const batchSchema = Joi.array().items(schema)
 const setSchema = Joi.array().items(idSchema)
 
 /** 单个课程 PUT 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const body: EntityData<Course> = await schema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Course)
 	let course = await repo.findOne(ctx.params.courseID)
@@ -26,7 +26,7 @@ export async function single(ctx: Context) {
 }
 
 /** 课程批量 PUT 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const body: EntityData<Course>[] = await batchSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Course)
 	const courses = await repo.find(body.map((data) => data.id))
@@ -46,7 +46,7 @@ export async function batch(ctx: Context) {
 }
 
 /** 课程的学生列表 PUT 请求 */
-export async function students(ctx: Context) {
+export async function students(ctx: RouterContext) {
 	const body: string[] = await setSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Course)
 	const course = await repo.findOne(ctx.params.courseID, ['students'])
@@ -58,7 +58,7 @@ export async function students(ctx: Context) {
 }
 
 /** 课程的教师列表 PUT 请求 */
-export async function teachers(ctx: Context) {
+export async function teachers(ctx: RouterContext) {
 	const body: string[] = await setSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(Course)
 	const course = await repo.findOne(ctx.params.courseID, ['teachers'])

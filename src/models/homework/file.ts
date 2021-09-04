@@ -1,16 +1,16 @@
 import ORM, { Homework } from '@/ORM'
 import OSS from '@/OSS'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const schema = Joi.object({
 	filename: Joi.string().required()
 })
 
 /** 作业文件上传请求 */
-export async function upload(ctx: Context) {
+export async function upload(ctx: RouterContext) {
 	const { filename }: { filename: string } = await schema.validateAsync(ctx.request.body)
-	const { courseID, taskID, studentID }: { [key: string]: string } = ctx.params
+	const { courseID, taskID, studentID } = ctx.params
 	const repo = ORM.em.getRepository(Homework)
 	let homework = await repo.findOne([[courseID, taskID], studentID])
 	if (homework === null) {
@@ -23,8 +23,8 @@ export async function upload(ctx: Context) {
 }
 
 /** 作业文件下载请求 */
-export async function download(ctx: Context) {
-	const { courseID, taskID, studentID }: { [key: string]: string } = ctx.params
+export async function download(ctx: RouterContext) {
+	const { courseID, taskID, studentID } = ctx.params
 	const repo = ORM.em.getRepository(Homework)
 	const homework = await repo.findOne([[courseID, taskID], studentID])
 	if (homework === null || homework.filename === null)
@@ -33,8 +33,8 @@ export async function download(ctx: Context) {
 }
 
 /** 作业文件删除请求 */
-export async function remove(ctx: Context) {
-	const { courseID, taskID, studentID }: { [key: string]: string } = ctx.params
+export async function remove(ctx: RouterContext) {
+	const { courseID, taskID, studentID } = ctx.params
 	const repo = ORM.em.getRepository(Homework)
 	const homework = await repo.findOne([[courseID, taskID], studentID])
 	if (homework === null || homework.filename === null)

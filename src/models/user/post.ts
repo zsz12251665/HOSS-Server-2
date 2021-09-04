@@ -2,7 +2,7 @@ import { interpret, sign } from '@/JWT'
 import ORM, { User } from '@/ORM'
 import { EntityData } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const loginSchema = Joi.object({
@@ -19,7 +19,7 @@ const registerSchema = Joi.object({
 })
 
 /** 用户登录请求 */
-export async function login(ctx: Context) {
+export async function login(ctx: RouterContext) {
 	const body: { [key: string]: string } = await loginSchema.validateAsync(ctx.request.body)
 	if (ctx.params.userID !== undefined && ctx.params.userID !== body.id)
 		ctx.throw(400, 'The id does not match!')
@@ -33,7 +33,7 @@ export async function login(ctx: Context) {
 }
 
 /** 注册用户请求 */
-export async function register(ctx: Context) {
+export async function register(ctx: RouterContext) {
 	const body: EntityData<User> = await registerSchema.validateAsync(ctx.request.body)
 	const repo = ORM.em.getRepository(User)
 	if (ctx.headers.token !== undefined) {

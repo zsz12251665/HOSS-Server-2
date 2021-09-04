@@ -3,8 +3,9 @@ import { filterMiddleware, filterFunction } from '../filter'
 
 const administratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID)
+		if (ctx.state.authorization.user === undefined)
+			ctx.state.authorization.user = await ORM.em.findOne(User, <string>ctx.state.authorization.userID)
+		const user: User | null = ctx.state.authorization.user
 		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
 	return ctx.state.authorization.isAdministrator
@@ -12,21 +13,12 @@ const administratorChecker: filterFunction = async (ctx) => {
 
 const selfChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isResourceTeacher === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID)
+		if (ctx.state.authorization.user === undefined)
+			ctx.state.authorization.user = await ORM.em.findOne(User, <string>ctx.state.authorization.userID)
+		const user: User | null = ctx.state.authorization.user
 		ctx.state.authorization.isResourceTeacher = user !== null && user.teacher !== null && user.teacher.id === ctx.params.teacherID
 	}
 	return ctx.state.authorization.isResourceTeacher
-}
-
-const selfOrAdministratorChecker: filterFunction = async (ctx) => {
-	if (ctx.state.authorization.isResourceTeacher === undefined || ctx.state.authorization.isAdministrator === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID)
-		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
-		ctx.state.authorization.isResourceTeacher = user !== null && user.teacher !== null && user.teacher.id === ctx.params.teacherID
-	}
-	return ctx.state.authorization.isResourceTeacher || ctx.state.authorization.isAdministrator
 }
 
 /** 过滤器：仅管理员 */
@@ -36,4 +28,4 @@ export const administratorOnly = filterMiddleware(administratorChecker)
 export const selfOnly = filterMiddleware(selfChecker)
 
 /** 过滤器：资源教师自身和管理员 */
-export const selfOrAdministrator = filterMiddleware(selfOrAdministratorChecker)
+export const selfOrAdministrator = filterMiddleware(async (ctx) => await administratorChecker(ctx) || await selfChecker(ctx))

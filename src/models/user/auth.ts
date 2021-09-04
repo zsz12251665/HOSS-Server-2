@@ -3,8 +3,7 @@ import { filterMiddleware, filterFunction } from '../filter'
 
 const administratorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isAdministrator === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID)
+		const user = await ORM.em.findOne(User, <string>ctx.state.authorization.userID)
 		ctx.state.authorization.isAdministrator = user !== null && user.isAdministrator
 	}
 	return ctx.state.authorization.isAdministrator

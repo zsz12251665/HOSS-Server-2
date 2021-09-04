@@ -1,8 +1,8 @@
 import ORM, { User } from '@/ORM'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 /** 单个用户 DELETE 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.userID)
 	if (user === null)

@@ -1,7 +1,7 @@
 import ORM, { User } from '@/ORM'
 import { EntityData, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
@@ -14,7 +14,7 @@ const schema = Joi.object({
 const batchSchema = Joi.array().items(Joi.array().ordered(idSchema, schema))
 
 /** 单个用户 PATCH 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const body: EntityData<User> = await schema.validateAsync(ctx.request.body)
 	if (!ctx.state.authorization.isAdministrator)
 		Object.keys(body).filter((key) => ['id', 'password'].includes(key)).forEach((key) => delete body[key])
@@ -28,7 +28,7 @@ export async function single(ctx: Context) {
 }
 
 /** 用户批量 PATCH 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const body: [string, EntityData<User>][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
 	const bodyMap = new Map(body)
 	const repo = ORM.em.getRepository(User)

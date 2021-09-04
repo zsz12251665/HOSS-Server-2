@@ -1,8 +1,8 @@
 import ORM, { Student } from '@/ORM'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 /** 单个学生 DELETE 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(Student)
 	const student = await repo.findOne(ctx.params.studentID)
 	if (student === null)

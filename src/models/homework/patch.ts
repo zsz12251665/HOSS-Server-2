@@ -1,7 +1,7 @@
 import ORM, { Course, Homework } from '@/ORM'
 import { EntityData, Primary, wrap } from '@mikro-orm/core'
 import Joi from 'joi'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 const idSchema = Joi.string().pattern(/\w+$/)
 const schema = Joi.object({
@@ -10,11 +10,13 @@ const schema = Joi.object({
 const batchSchema = Joi.array().items(Joi.array().ordered(idSchema, schema))
 
 /** 单个作业 PATCH 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const body: EntityData<Homework> = await schema.validateAsync(ctx.request.body)
-	const { courseID, taskID, studentID }: { [key: string]: string } = ctx.params
+	const { courseID, taskID, studentID } = ctx.params
+	/** @see {@link ../task/param.ts:9} */
 	const course: Course = ctx.state.course
-	await ORM.em.populate(course, ['students'])
+	if (!course.students.isInitialized())
+		await ORM.em.populate(course, ['students'])
 	if (!course.students.getIdentifiers().includes(studentID))
 		ctx.throw(404)
 	const repo = ORM.em.getRepository(Homework)
@@ -29,12 +31,14 @@ export async function single(ctx: Context) {
 }
 
 /** 作业批量 PATCH 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const body: [string, EntityData<Homework>][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
 	const bodyMap = new Map(body)
-	const { courseID, taskID }: { [key: string]: string } = ctx.params
+	const { courseID, taskID } = ctx.params
+	/** @see {@link ../task/param.ts:9} */
 	const course: Course = ctx.state.course
-	await ORM.em.populate(course, ['students'])
+	if (!course.students.isInitialized())
+		await ORM.em.populate(course, ['students'])
 	const relatedStudentIDs = course.students.getIdentifiers()
 	const updatedStudentIDs = body.map((entry) => entry[0]).filter((studentID) => relatedStudentIDs.includes(studentID))
 	if (updatedStudentIDs.length === 0)

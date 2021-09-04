@@ -3,8 +3,7 @@ import { filterMiddleware, filterFunction } from '../filter'
 
 const relatedStudentChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedStudent === undefined) {
-		const repo = ORM.em.getRepository(Student)
-		const student = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
+		const student = await ORM.em.findOne(Student, { user: ctx.state.authorization.userID }, ['courses'])
 		ctx.state.authorization.isRelatedStudent = student !== null && student.courses.getIdentifiers().includes(ctx.params.courseID)
 	}
 	return ctx.state.authorization.isRelatedStudent
@@ -12,8 +11,7 @@ const relatedStudentChecker: filterFunction = async (ctx) => {
 
 const relatedTeacherChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isRelatedTeacher === undefined) {
-		const repo = ORM.em.getRepository(Teacher)
-		const teacher = await repo.findOne({ user: ctx.state.authorization.userID }, ['courses'])
+		const teacher = await ORM.em.findOne(Teacher, { user: ctx.state.authorization.userID }, ['courses'])
 		ctx.state.authorization.isRelatedTeacher = teacher !== null && teacher.courses.getIdentifiers().includes(ctx.params.courseID)
 	}
 	return ctx.state.authorization.isRelatedTeacher
@@ -21,17 +19,16 @@ const relatedTeacherChecker: filterFunction = async (ctx) => {
 
 const relatedMonitorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.hasManagedTasks === undefined) {
-		const repo = ORM.em.getRepository(User)
-		const user = await repo.findOne(ctx.state.authorization.userID, ['tasks'])
+		const user = await ORM.em.findOne(User, <string>ctx.state.authorization.userID, ['tasks'])
 		ctx.state.authorization.hasManagedTasks = user !== null && user.tasks.getItems().some((task) => task.course.id === ctx.params.courseID)
+		ctx.state.authorization.user = user
 	}
 	return ctx.state.authorization.hasManagedTasks
 }
 
 const monitorChecker: filterFunction = async (ctx) => {
 	if (ctx.state.authorization.isMonitor === undefined) {
-		const repo = ORM.em.getRepository(Task)
-		const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID], ['monitors'])
+		const task = await ORM.em.findOne(Task, [ctx.params.courseID, ctx.params.taskID], ['monitors'])
 		ctx.state.authorization.isMonitor = task !== null && task.monitors.contains(ORM.em.getReference(User, ctx.state.authorization.userID))
 	}
 	return ctx.state.authorization.isMonitor

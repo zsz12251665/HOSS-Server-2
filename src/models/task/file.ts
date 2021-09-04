@@ -1,10 +1,10 @@
 import ORM, { Task } from '@/ORM'
 import OSS from '@/OSS'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 /** 作业文件打包下载请求 */
-export async function download(ctx: Context) {
-	const { courseID, taskID }: { [key: string]: string } = ctx.params
+export async function download(ctx: RouterContext) {
+	const { courseID, taskID } = ctx.params
 	const repo = ORM.em.getRepository(Task)
 	const task = await repo.findOne([courseID, taskID], ['homeworks'])
 	if (task === null)

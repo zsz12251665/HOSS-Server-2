@@ -1,9 +1,9 @@
 import ORM, { Task, Teacher } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 /** 单个教师 GET 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(Teacher)
 	const teacher = await repo.findOne(ctx.params.teacherID)
 	if (teacher === null)
@@ -12,14 +12,14 @@ export async function single(ctx: Context) {
 }
 
 /** 教师批量 GET 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(Teacher)
 	const teachers = await repo.findAll()
 	ctx.body = teachers.map((teacher) => wrap(teacher).toObject())
 }
 
 /** 教师的课程列表 GET 请求 */
-export async function courses(ctx: Context) {
+export async function courses(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(Teacher)
 	const teacher = await repo.findOne(ctx.params.teacherID, ['courses'])
 	if (teacher === null)
@@ -28,7 +28,7 @@ export async function courses(ctx: Context) {
 }
 
 /** 教师的任务列表 GET 请求 */
-export async function tasks(ctx: Context) {
+export async function tasks(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(Teacher)
 	const teacher = await repo.findOne(ctx.params.teacherID, ['courses'])
 	if (teacher === null)

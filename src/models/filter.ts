@@ -1,12 +1,13 @@
 import { interpret } from '@/JWT'
-import { Context, Middleware, Next } from 'koa'
+import { RouterContext, Middleware } from '@koa/router'
+import { Next } from 'koa'
 
 /**
  * 过滤函数
- * @param {Context} ctx Koa 上下文
+ * @param {RouterContext} ctx Koa Router 上下文
  * @returns {boolean} 请求是否通过
  */
-export type filterFunction = (ctx: Context) => Promise<boolean>
+export type filterFunction = (ctx: RouterContext) => Promise<boolean>
 
 /**
  * 过滤器中间件生成器
@@ -14,7 +15,7 @@ export type filterFunction = (ctx: Context) => Promise<boolean>
  * @returns {Middleware} 过滤器中间件
  */
 export function filterMiddleware(filter: filterFunction): Middleware {
-	return async function (ctx: Context, next: Next) {
+	return async function (ctx: RouterContext, next: Next) {
 		// Interpret the token
 		if (ctx.headers.token === undefined)
 			ctx.throw(401, 'No authorization token is provided!')

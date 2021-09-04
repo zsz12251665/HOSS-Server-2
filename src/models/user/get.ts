@@ -1,9 +1,9 @@
 import ORM, { User } from '@/ORM'
 import { wrap } from '@mikro-orm/core'
-import { Context } from 'koa'
+import { RouterContext } from '@koa/router'
 
 /** 单个用户 GET 请求 */
-export async function single(ctx: Context) {
+export async function single(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.userID)
 	if (user === null)
@@ -12,14 +12,14 @@ export async function single(ctx: Context) {
 }
 
 /** 用户批量 GET 请求 */
-export async function batch(ctx: Context) {
+export async function batch(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(User)
 	const users = await repo.findAll()
 	ctx.body = users.map((user) => wrap(user).toObject())
 }
 
 /** 用户管理的任务列表 GET 请求 */
-export async function tasks(ctx: Context) {
+export async function tasks(ctx: RouterContext) {
 	const repo = ORM.em.getRepository(User)
 	const user = await repo.findOne(ctx.params.userID, ['tasks'])
 	if (user === null)
