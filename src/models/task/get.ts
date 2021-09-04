@@ -8,8 +8,7 @@ export async function single(ctx: Context) {
 	const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID])
 	if (task === null)
 		ctx.throw(404)
-	else
-		ctx.body = wrap(task).toObject()
+	ctx.body = wrap(task).toObject()
 }
 
 /** 任务批量 GET 请求 */
@@ -31,6 +30,5 @@ export async function monitors(ctx: Context) {
 	const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID], ['monitors'])
 	if (task === null)
 		ctx.throw(404)
-	else
-		ctx.body = task.monitors.getIdentifiers()
+	ctx.body = task.monitors.getIdentifiers()
 }

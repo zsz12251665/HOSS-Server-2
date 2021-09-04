@@ -4,7 +4,7 @@ import { prompt as ask } from 'inquirer'
 
 const configPath = 'config/jwt.json'
 
-async function configure() {
+export default async function () {
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	console.log('----- JWT Config -----')
 	const config = await ask([
@@ -24,5 +24,3 @@ async function configure() {
 	writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 	console.log('JWT config is up to date!')
 }
-
-export default configure

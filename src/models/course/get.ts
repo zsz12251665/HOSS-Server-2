@@ -8,8 +8,7 @@ export async function single(ctx: Context) {
 	const course = await repo.findOne(ctx.params.courseID)
 	if (course === null)
 		ctx.throw(404)
-	else
-		ctx.body = wrap(course).toObject()
+	ctx.body = wrap(course).toObject()
 }
 
 /** 课程批量 GET 请求 */
@@ -34,8 +33,7 @@ export async function students(ctx: Context) {
 	const course = await repo.findOne(ctx.params.courseID, ['students'])
 	if (course === null)
 		ctx.throw(404)
-	else
-		ctx.body = course.students.getIdentifiers()
+	ctx.body = course.students.getIdentifiers()
 }
 
 /** 课程的教师列表 GET 请求 */
@@ -44,6 +42,5 @@ export async function teachers(ctx: Context) {
 	const course = await repo.findOne(ctx.params.courseID, ['teachers'])
 	if (course === null)
 		ctx.throw(404)
-	else
-		ctx.body = course.teachers.getIdentifiers()
+	ctx.body = course.teachers.getIdentifiers()
 }

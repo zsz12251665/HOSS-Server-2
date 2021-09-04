@@ -8,7 +8,7 @@ const functionMap = new Map<string, (config: any) => Promise<any>>([
 	['SampleOSS', SampleOSS]
 ])
 
-async function configure() {
+export default async function () {
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	console.log('----- OSS Config -----')
 	const { dialect } = await ask([{
@@ -25,5 +25,3 @@ async function configure() {
 	writeFileSync(configPath, JSON.stringify(config, null, '\t'))
 	console.log('OSS config is up to date!')
 }
-
-export default configure

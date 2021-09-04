@@ -17,12 +17,9 @@ const setSchema = Joi.object({
 	delete: Joi.array().items(idSchema).optional()
 })
 
-const trim = (obj: { [key: string]: any }) => Object.keys(obj).filter((key) => obj[key] === undefined).forEach((key) => delete obj[key])
-
 /** 单个任务 PATCH 请求 */
 export async function single(ctx: Context) {
 	const body: EntityData<Task> = await schema.validateAsync(ctx.request.body)
-	trim(body)
 	const repo = ORM.em.getRepository(Task)
 	const task = await repo.findOne([ctx.params.courseID, ctx.params.taskID])
 	if (task === null)
@@ -35,7 +32,6 @@ export async function single(ctx: Context) {
 /** 任务批量 PATCH 请求 */
 export async function batch(ctx: Context) {
 	const body: [string, EntityData<Task>][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
-	body.forEach(([_, data]) => trim(data))
 	const bodyMap = new Map(body)
 	const repo = ORM.em.getRepository(Task)
 	const tasks = await repo.find(body.map((entry) => <Primary<Task>>[ctx.params.courseID, entry[0]]))

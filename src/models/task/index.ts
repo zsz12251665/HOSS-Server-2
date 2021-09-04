@@ -1,6 +1,5 @@
 import Router from '@koa/router'
 import homeworkRouter from '../homework'
-import teacherRouter from '../teacher'
 import * as authFilter from './auth'
 import * as deleteHandler from './delete'
 import * as fileHandler from './file'
@@ -18,10 +17,9 @@ taskRouter.put('/', authFilter.teacherOnly, putHandler.batch)
 taskRouter.patch('/', authFilter.teacherOnly, patchHandler.batch)
 
 taskRouter.get('/:taskID', authFilter.monitorOrStudentOrTeacher, getHandler.single)
-teacherRouter.all('/:taskID', authFilter.teacherOnly)
-taskRouter.put('/:taskID', putHandler.single)
-taskRouter.patch('/:taskID', patchHandler.single)
-taskRouter.delete('/:taskID', deleteHandler.single)
+taskRouter.put('/:taskID', authFilter.teacherOnly, putHandler.single)
+taskRouter.patch('/:taskID', authFilter.teacherOnly, patchHandler.single)
+taskRouter.delete('/:taskID', authFilter.teacherOnly, deleteHandler.single)
 
 taskRouter.get('/:taskID/files', authFilter.teacherOnly, fileHandler.download)
 

@@ -9,12 +9,9 @@ const schema = Joi.object({
 })
 const batchSchema = Joi.array().items(Joi.array().ordered(idSchema, schema))
 
-const trim = (obj: { [key: string]: any }) => Object.keys(obj).filter((key) => obj[key] === undefined).forEach((key) => delete obj[key])
-
 /** 单个作业 PATCH 请求 */
 export async function single(ctx: Context) {
 	const body: EntityData<Homework> = await schema.validateAsync(ctx.request.body)
-	trim(body)
 	const { courseID, taskID, studentID }: { [key: string]: string } = ctx.params
 	const course: Course = ctx.state.course
 	await ORM.em.populate(course, ['students'])
@@ -34,7 +31,6 @@ export async function single(ctx: Context) {
 /** 作业批量 PATCH 请求 */
 export async function batch(ctx: Context) {
 	const body: [string, EntityData<Homework>][] = await batchSchema.validateAsync(Object.entries(ctx.request.body))
-	body.forEach(([_, data]) => trim(data))
 	const bodyMap = new Map(body)
 	const { courseID, taskID }: { [key: string]: string } = ctx.params
 	const course: Course = ctx.state.course

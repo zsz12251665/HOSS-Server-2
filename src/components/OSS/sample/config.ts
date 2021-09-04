@@ -1,3 +1,1 @@
-const configure = async () => {}
-
-export default configure
+export default async () => {}

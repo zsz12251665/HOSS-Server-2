@@ -8,8 +8,7 @@ export async function single(ctx: Context) {
 	const user = await repo.findOne(ctx.params.userID)
 	if (user === null)
 		ctx.throw(404)
-	else
-		ctx.body = wrap(user).toObject()
+	ctx.body = wrap(user).toObject()
 }
 
 /** 用户批量 GET 请求 */
@@ -25,6 +24,5 @@ export async function tasks(ctx: Context) {
 	const user = await repo.findOne(ctx.params.userID, ['tasks'])
 	if (user === null)
 		ctx.throw(404)
-	else
-		ctx.body = user.tasks.getItems().map((task) => wrap(task).toObject())
+	ctx.body = user.tasks.getItems().map((task) => wrap(task).toObject())
 }

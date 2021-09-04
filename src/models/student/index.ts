@@ -7,16 +7,14 @@ import * as putHandler from './put'
 
 const studentRouter = new Router({ prefix: '/students' })
 
-studentRouter.all('/', authFilter.administratorOnly)
-studentRouter.get('/', getHandler.batch)
-studentRouter.put('/', putHandler.batch)
-studentRouter.patch('/', patchHandler.batch)
+studentRouter.get('/', authFilter.administratorOnly, getHandler.batch)
+studentRouter.put('/', authFilter.administratorOnly, putHandler.batch)
+studentRouter.patch('/', authFilter.administratorOnly, patchHandler.batch)
 
 studentRouter.get('/:studentID', authFilter.selfOrAdministrator, getHandler.single)
-studentRouter.all('/:studentID', authFilter.administratorOnly)
-studentRouter.put('/:studentID', putHandler.single)
-studentRouter.patch('/:studentID', patchHandler.single)
-studentRouter.delete('/:studentID', deleteHandler.single)
+studentRouter.put('/:studentID', authFilter.administratorOnly, putHandler.single)
+studentRouter.patch('/:studentID', authFilter.administratorOnly, patchHandler.single)
+studentRouter.delete('/:studentID', authFilter.administratorOnly, deleteHandler.single)
 
 studentRouter.get('/:studentID/courses', authFilter.selfOrAdministrator, getHandler.courses)
 studentRouter.put('/:studentID/courses', authFilter.administratorOnly, putHandler.courses)

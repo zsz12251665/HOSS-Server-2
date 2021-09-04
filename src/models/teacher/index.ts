@@ -7,16 +7,14 @@ import * as putHandler from './put'
 
 const teacherRouter = new Router({ prefix: '/teachers' })
 
-teacherRouter.all('/', authFilter.administratorOnly)
-teacherRouter.get('/', getHandler.batch)
-teacherRouter.put('/', putHandler.batch)
-teacherRouter.patch('/', patchHandler.batch)
+teacherRouter.get('/', authFilter.administratorOnly, getHandler.batch)
+teacherRouter.put('/', authFilter.administratorOnly, putHandler.batch)
+teacherRouter.patch('/', authFilter.administratorOnly, patchHandler.batch)
 
 teacherRouter.get('/:teacherID', authFilter.selfOrAdministrator, getHandler.single)
-teacherRouter.all('/:teacherID', authFilter.administratorOnly)
-teacherRouter.put('/:teacherID', putHandler.single)
-teacherRouter.patch('/:teacherID', patchHandler.single)
-teacherRouter.delete('/:teacherID', deleteHandler.single)
+teacherRouter.put('/:teacherID', authFilter.administratorOnly, putHandler.single)
+teacherRouter.patch('/:teacherID', authFilter.administratorOnly, patchHandler.single)
+teacherRouter.delete('/:teacherID', authFilter.administratorOnly, deleteHandler.single)
 
 teacherRouter.get('/:teacherID/courses', authFilter.selfOrAdministrator, getHandler.courses)
 teacherRouter.put('/:teacherID/courses', authFilter.administratorOnly, putHandler.courses)

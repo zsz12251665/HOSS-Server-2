@@ -13,10 +13,9 @@ courseRouter.put('/', authFilter.administratorOnly, putHandler.batch)
 courseRouter.patch('/', authFilter.administratorOnly, patchHandler.batch)
 
 courseRouter.get('/:courseID', authFilter.studentOrTeacherOrAdministrator, getHandler.single)
-courseRouter.all('/:courseID', authFilter.administratorOnly)
-courseRouter.put('/:courseID', putHandler.single)
-courseRouter.patch('/:courseID', patchHandler.single)
-courseRouter.delete('/:courseID', deleteHandler.single)
+courseRouter.put('/:courseID', authFilter.administratorOnly, putHandler.single)
+courseRouter.patch('/:courseID', authFilter.administratorOnly, patchHandler.single)
+courseRouter.delete('/:courseID', authFilter.administratorOnly, deleteHandler.single)
 
 courseRouter.get('/:courseID/students', authFilter.studentOrTeacherOrAdministrator, getHandler.students)
 courseRouter.put('/:courseID/students', authFilter.administratorOnly, putHandler.students)

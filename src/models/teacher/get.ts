@@ -8,8 +8,7 @@ export async function single(ctx: Context) {
 	const teacher = await repo.findOne(ctx.params.teacherID)
 	if (teacher === null)
 		ctx.throw(404)
-	else
-		ctx.body = wrap(teacher).toObject()
+	ctx.body = wrap(teacher).toObject()
 }
 
 /** 教师批量 GET 请求 */
@@ -25,8 +24,7 @@ export async function courses(ctx: Context) {
 	const teacher = await repo.findOne(ctx.params.teacherID, ['courses'])
 	if (teacher === null)
 		ctx.throw(404)
-	else
-		ctx.body = teacher.courses.getIdentifiers()
+	ctx.body = teacher.courses.getIdentifiers()
 }
 
 /** 教师的任务列表 GET 请求 */

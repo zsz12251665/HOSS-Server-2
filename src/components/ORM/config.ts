@@ -88,7 +88,7 @@ async function updateSchema(orm: MikroORM) {
 	}
 }
 
-async function configure() {
+export default async function () {
 	const defaultConfig = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf-8')) : {}
 	console.log('----- ORM Config -----')
 	for (; ;) {
@@ -104,5 +104,3 @@ async function configure() {
 			console.error('Fail to connect to the database!')
 	}
 }
-
-export default configure
