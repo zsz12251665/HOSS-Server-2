@@ -1,17 +1,15 @@
-import { Collection, Entity, IdentifiedReference, ManyToMany, ManyToOne, OneToMany, Primary, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Course } from './Course'
-import { Homework } from './Homework'
-import { User } from './User'
+import { Collection, Entity, ManyToOne, OneToMany, Primary, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Course, Homework } from '.'
 
 @Entity()
 export class Task {
 	[PrimaryKeyType]: [Primary<Course>, Task['id']]
 
 	@ManyToOne({ primary: true })
-	course!: IdentifiedReference<Course>
+	course!: Course
 
 	@PrimaryKey()
-	id!: string
+	id!: number
 
 	@Property()
 	title!: string
@@ -22,12 +20,6 @@ export class Task {
 	@Property({ columnType: 'text' })
 	description: string = ''
 
-	@Property()
-	pattern: string = ':name:-:id:'
-
 	@OneToMany(() => Homework, 'task', { hidden: true, orphanRemoval: true })
 	homeworks = new Collection<Homework>(this)
-
-	@ManyToMany(() => User, 'tasks', { hidden: true })
-	monitors = new Collection<User>(this)
 }

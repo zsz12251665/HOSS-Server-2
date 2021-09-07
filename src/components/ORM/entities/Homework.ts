@@ -1,20 +1,19 @@
-import { Entity, IdentifiedReference, ManyToOne, Primary, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Student } from './Student'
-import { Task } from './Task'
+import { Collection, Entity, ManyToMany, ManyToOne, Primary, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Student, Task } from '.'
 
 @Entity()
 export class Homework {
-	[PrimaryKeyType]: [Primary<Task>, Primary<Student>]
+	[PrimaryKeyType]: [...Primary<Task>, Homework['id']]
 
 	@ManyToOne({ primary: true })
-	task!: IdentifiedReference<Task>
+	task!: Task
 
-	@ManyToOne({ primary: true })
-	student!: IdentifiedReference<Student>
+	@PrimaryKey()
+	id!: number
 
 	@Property()
 	filename: string | null = null
 
-	@Property()
-	group: string | null = null
+	@ManyToMany({ hidden: true })
+	students = new Collection<Student>(this)
 }

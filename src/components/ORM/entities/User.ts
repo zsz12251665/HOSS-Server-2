@@ -1,8 +1,6 @@
 import { Collection, Entity, ManyToMany, OneToOne, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
 import { BinaryLike, createHash } from 'crypto'
-import { Student } from './Student'
-import { Task } from './Task'
-import { Teacher } from './Teacher'
+import { Course, Student, Teacher } from '.'
 
 const encrypt = (content: BinaryLike) => createHash('sha256').update(content).digest('hex')
 
@@ -34,6 +32,6 @@ export class User {
 	@OneToOne({ onDelete: 'set null' })
 	teacher: Teacher | null = null
 
-	@ManyToMany({ hidden: true })
-	tasks = new Collection<Task>(this)
+	@ManyToMany(() => Course, 'assistants', { hidden: true })
+	courses = new Collection<Course>(this)
 }

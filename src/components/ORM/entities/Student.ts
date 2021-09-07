@@ -1,7 +1,5 @@
-import { Collection, Entity, ManyToMany, OneToMany, OneToOne, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Course } from './Course'
-import { Homework } from './Homework'
-import { User } from './User'
+import { Collection, Entity, ManyToMany, OneToOne, PrimaryKey, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Course, Homework, User } from '.'
 
 @Entity()
 export class Student {
@@ -22,6 +20,6 @@ export class Student {
 	@ManyToMany(() => Course, 'students', { hidden: true })
 	courses = new Collection<Course>(this)
 
-	@OneToMany(() => Homework, 'student', { hidden: true, orphanRemoval: true })
+	@ManyToMany(() => Homework, 'students', { hidden: true })
 	homeworks = new Collection<Homework>(this)
 }
